@@ -34,7 +34,7 @@ class List extends React.Component{
                 <div className={styles['icon-container']}>
                     {this.state.opened ? <FaCompressArrowsAlt /> : <FaExpandArrowsAlt />}
                 </div>
-                <strong>#{this.props.id} - {this.props.title}</strong>
+                <strong>{this.props.title}</strong>
                 <span>Due date: {this.props.due_date ? new Date(this.props.due_date).toDateString() : '<never>'}</span>
                 <span>Items: {`${this.props.items_done}/${this.props.items_count}`}</span>
                 {

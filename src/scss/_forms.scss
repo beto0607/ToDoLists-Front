@@ -12,10 +12,24 @@ form{
         input{
             display: block;
             width: 90%;
+            outline: none;
             margin: 5px auto 20px auto;
+            border: 1px solid rgb(141, 141, 141);
         }
         &.with-errors{
             border: 2px solid red;
+            input, textarea{
+                border-color:red;
+            }
         }
+        textarea{
+            display: block;
+            margin: 5px auto 20px auto;
+            outline: none;
+            resize: none;
+            width: 90%;
+            height: 3em;
+            border: 1px solid rgb(141, 141, 141);
+        }        
     }
 }

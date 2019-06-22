@@ -5,6 +5,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom'
 
 import List from '../../components/List';
+import ListNew from '../../components/ListNew';
 import styles from './Dashboard.module.scss';
 
 import { FaPlus } from 'react-icons/fa';
@@ -23,12 +24,22 @@ class Dashboard extends React.Component{
                 user_lists_url: props.base_url+`users/${localStorage.getItem('user_id')}/lists`,
                 lists_url: props.base_url+'lists',
                 user_token: localStorage.getItem('token'),
-                lists:[]
+                lists:[],
+                showListNew: false
             }
             this.lists = null;
-            this.authorization_header = new Headers({'Authorization': `Basic ${this.state.user_token}`});
+            this.authorization_header = new Headers({
+                'Content-type':'application/json',
+                'Authorization': String.raw`Basic ${this.state.user_token}`
+            });
         }
         this.closeLists = this.closeLists.bind(this);
+        this.handleAddButonClick = this.handleAddButonClick.bind(this);
+        this.closeAddList = this.closeAddList.bind(this);
+        this.listAdded = this.listAdded.bind(this);
+    }
+    closeAddList(){
+        this.setState({showListNew: false});
     }
     redirect(to = '/auth'){
         this.setState({redirect: true, redirect_target: to});
@@ -64,17 +75,43 @@ class Dashboard extends React.Component{
             }
         });
     }
+    listAdded(data){
+        this.lists_ref.push(React.createRef());
+        this.lists.push(
+            (<List 
+                key={`list#${this.lists_ref.length-1}`} 
+                {...data} 
+                items_count={12} 
+                items_done={1} 
+                closeLists={this.closeLists}
+                ref={this.lists_ref[this.lists_ref.length-1]}
+            />)
+        );
+        this.setState(this.state); 
+        this.closeAddList();
+    }
     closeLists(){
         this.lists_ref.forEach(element => element.current.close());
+    }
+    handleAddButonClick(){
+        this.setState({showListNew: true});
     }
 	render(){
         if(this.state.redirect){return (<Redirect to={this.state.redirect_target} />);}
 		return (
             <div className={styles['dashboard-container']}>
                 <h1>Dashboard</h1>
-                <div className={styles['add-button-container']}>
+                <div className={styles['add-button-container']} onClick={this.handleAddButonClick}>
                     <FaPlus />
                 </div>
+                {(
+                    this.state.showListNew && 
+                    <ListNew 
+                        base_url={this.props.base_url} 
+                        close={this.closeAddList} 
+                        listAdded={this.listAdded}
+                        authorization_header={this.authorization_header}/>
+                )}
                 <div className={styles['lists-container']}>
                     {this.lists}
                 </div>
