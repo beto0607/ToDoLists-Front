@@ -4,6 +4,7 @@ import './index.css';
 import './scss/_main.scss';
 import App from './App';
 import Authentication from './containers/Authentication';
+import Dashboard from './containers/Dashboard';
 import NotFound from './containers/NotFound';
 import * as serviceWorker from './serviceWorker';
 import { Switch, Route,  BrowserRouter as Router } from 'react-router-dom'
@@ -14,6 +15,7 @@ const routing = (
 	  <Switch>
       	<Route exact path="/" component={App} />
   	    <Route path="/auth" component={Authentication} />
+        <Route path="/dashboard" component={Dashboard} />
 		<Route component={NotFound}/>
       </Switch>
   	</div>
