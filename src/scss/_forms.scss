@@ -1,0 +1,21 @@
+form{
+    text-align: center;
+    .input-container{
+        margin: auto;
+        max-width: 200px;
+        text-align: left;
+        label{
+            text-transform: capitalize;
+            display: block;
+            margin: 20px 0 5px 0;
+        }
+        input{
+            display: block;
+            width: 90%;
+            margin: 5px auto 20px auto;
+        }
+        &.with-errors{
+            border: 2px solid red;
+        }
+    }
+}
