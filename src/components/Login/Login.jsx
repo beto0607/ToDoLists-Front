@@ -78,4 +78,5 @@ const saveLoginData = data => {
   localStorage.setItem("token", data.token);
   localStorage.setItem("username", data.username);
   localStorage.setItem("token_expires", data.exp);
+  localStorage.setItem("user_id", data.user_id);
 };
