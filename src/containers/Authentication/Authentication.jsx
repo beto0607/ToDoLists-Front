@@ -41,16 +41,15 @@ class Authentication extends React.Component {
   loginSuccess(data){
     this.setState({
         messageClass: styles['success-message'],
-        message: `Welcome back @${data.username}!`
+        message: `Welcome back ${data.included[0].attributes.name || "@"+data.included[0].attributes.username}!`
     });
-    // setTimeout(()=>{
-    //     alert("redirected");
-    // }, 700, this);
     setTimeout(()=>{
         this.redirect('/dashboard');
     }, 700, this);
   }
-  loginError(data){
+  loginError(errors){
+    let titles = errors.map((e)=>e.title).join(" ");
+    let details = errors.map((e)=>e.details).join(" ");
     this.setState({
         messageClass: styles['error-message'],
         message: data
