@@ -8,6 +8,7 @@ import List from '../../components/List';
 import ListNew from '../../components/ListNew';
 import styles from './Dashboard.module.scss';
 
+import NotificationSystem from '../../components/NotificationSystem';
 import { FaPlus } from 'react-icons/fa';
 
 
@@ -113,6 +114,7 @@ class Dashboard extends React.Component{
         if(this.state.redirect){return (<Redirect to={this.state.redirect_target} />);}
 		return (
             <div className={styles['dashboard-container']}>
+                <NotificationSystem messages={this.messages}/>
                 <h1>Dashboard</h1>
                 <div className={styles['add-button-container']} onClick={this.handleAddButonClick}>
                     <FaPlus />
