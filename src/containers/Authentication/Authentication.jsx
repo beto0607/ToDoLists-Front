@@ -9,6 +9,8 @@ import styles from "./Authentication.module.scss";
 import Login from "../../components/Login";
 import Register from "../../components/Register";
 
+import NotificationSystem from '../../components/NotificationSystem';
+
 class Authentication extends React.Component {
   constructor(props) {
     super(props);
@@ -16,8 +18,7 @@ class Authentication extends React.Component {
     this.state = {
       showing: "login",
       base_url: "http://localhost:3001/",
-      messageClass: styles["no-messages"],
-      message: null,
+      messages: [],
       redirect_target: null,
       redirect: false
     };
@@ -32,34 +33,38 @@ class Authentication extends React.Component {
 
     this.redirect = this.redirect.bind(this);
   }
+
   redirect(to){
     this.setState({
         redirect: true,
         redirect_target: to
     });
   }
+
   loginSuccess(data){
     this.setState({
-        messageClass: styles['success-message'],
-        message: `Welcome back ${data.included[0].attributes.name || "@"+data.included[0].attributes.username}!`
-    });
-    setTimeout(()=>{
-        this.redirect('/dashboard');
-    }, 700, this);
+        messages: 
+            [{
+                title: 'Welcome back!', 
+                detail: String.raw`It's nice to see you again, ${data.included[0].attributes.name || "@"+data.included[0].attributes.username}!`,
+                type: 'good'
+            }]
+        });
+    //setTimeout(()=>{this.redirect('/dashboard');}, 700, this);
   }
+
   loginError(errors){
-    let titles = errors.map((e)=>e.title).join(" ");
-    let details = errors.map((e)=>e.details).join(" ");
     this.setState({
-        messageClass: styles['error-message'],
-        message: data
+        messages: errors.map(e=> {return {...e, type: 'error'}})
     });
   }
   registerSuccess(data){
 
   }
-  registerError(data){
-
+  registerError(errors){
+    this.setState({
+        messages: errors.map(e=> {return {...e, type: 'error'}})
+    });
   }
   handleLoginClick() {
     this.setState({ showing: "login" });
@@ -89,9 +94,7 @@ class Authentication extends React.Component {
           </a>
         </div>
         <div className={styles["options-container"]}>
-            <div>
-                <span className={this.state.messageClass}>{this.state.message}</span>
-            </div>
+            <NotificationSystem messages={this.state.messages}/>
           {this.state.showing === "login" && 
             <Login 
                 base_url={this.state.base_url} 

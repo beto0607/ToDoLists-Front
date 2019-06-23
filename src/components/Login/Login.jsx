@@ -33,14 +33,17 @@ class Login extends React.Component {
         return response.json();
       })
       .then(data => {
-          console.log(data);
-          
+        console.log(data);
+
         if (data.data) {
           saveLoginData(data);
           if (this.props.onSuccess) this.props.onSuccess(data);
         } else {
-            this.props.onError(data.errors);
+          this.props.onError(data.errors);
         }
+      })
+      .catch((err) => {
+        console.log(err.code);
       });
   }
   render() {
