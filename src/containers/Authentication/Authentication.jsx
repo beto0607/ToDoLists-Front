@@ -50,7 +50,7 @@ class Authentication extends React.Component {
                 type: 'good'
             }]
         });
-    //setTimeout(()=>{this.redirect('/dashboard');}, 700, this);
+    setTimeout(()=>{this.redirect('/dashboard');}, 700, this);
   }
 
   loginError(errors){
