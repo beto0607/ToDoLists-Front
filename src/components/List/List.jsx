@@ -66,6 +66,7 @@ class List extends React.Component {
     });
   }
   render() {
+    const {title, due_date, description, items_done_count, items_count} = this.props.attributes;
     return (
       <div
         className={
@@ -82,20 +83,17 @@ class List extends React.Component {
           onClick={this.handleDeleteClick}>
           <FaTrashAlt />
         </div>
-        <strong>{this.props.title}</strong>
+        <strong>{title}</strong>
         <span>
-          Due date:{" "}
-          {this.props.due_date
-            ? new Date(this.props.due_date).toDateString()
-            : "<never>"}
+          Due date:
+          {' '+(due_date ? new Date(due_date).toDateString() : "<unset>")}
         </span>
         <span>
-          Items: {`${this.props.items_done_count}/${this.props.items_count}`}
+          Items: {`${items_done_count}/${items_count}`}
         </span>
-        {this.props.description && (
+        {description && (
           <p>
-            Description: {this.props.description.substr(0, 120)}
-            {this.props.description.length > 120 && "..."}
+            Description: {description.substr(0, 120)+(description.length > 120 && "...")}
           </p>
         )}
         {this.state.opened && (
