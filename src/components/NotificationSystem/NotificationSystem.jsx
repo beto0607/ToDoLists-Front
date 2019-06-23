@@ -6,6 +6,8 @@
  * each message must have a type(good or error), a title and a detail
  */
 import React from "react";
+import PropTypes from 'prop-types';
+
 import styles from "./NotificationSystem.module.scss";
 
 const Message = props => (
@@ -24,7 +26,7 @@ class NotificationSystem extends React.Component {
   render() {
     return (
       <div className={styles["container"]}>
-        {this.props.messages.map((e) => {
+        {this.props.messages.map(e => {
           this.messagesCount++;
           return <Message {...e} key={"message#" + this.messagesCount} />;
         })}
@@ -32,4 +34,14 @@ class NotificationSystem extends React.Component {
     );
   }
 }
+NotificationSystem.propTypes = {
+  messages: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        detail: PropTypes.string.isRequired,
+        type: PropTypes.string,
+      }).isRequired
+  ).isRequired
+};
+
 export default NotificationSystem;
