@@ -23,10 +23,25 @@
         cursor: default;
         height: $list-padding * 2 + $list-height * 2 + $dashboard-grid-gap;
     }
-    .icon-container{
+    
+    .icon-container, .delete-container{
         float: right;
         padding: 10px;
         cursor: pointer;
+        color: red;
+        border-radius: 5px;
+        transition: 250ms;
+        &:hover{
+            color: white;
+            background: red;
+        }
+    }
+    .icon-container{
+        color: black;
+        &:hover{
+            color: white;
+            background: black;
+        }
     }
     &:nth-child(3n){
         grid-column: 3;
