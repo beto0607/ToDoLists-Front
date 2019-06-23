@@ -26,7 +26,8 @@ class Dashboard extends React.Component{
                 lists_url: props.base_url+'lists',
                 user_token: localStorage.getItem('token'),
                 lists:[],
-                showListNew: false
+                showListNew: false,
+                messages: []
             }
             this.lists = null;
             this.authorization_header = new Headers({
@@ -52,29 +53,27 @@ class Dashboard extends React.Component{
         .then(response => {
             if(!response.ok){throw new Error(response.status);}
             return response.json()
-        }).then((foo) => {
-            this.lists_ref =new Array(foo.length);
-
-            this.lists = foo.map((element, index)=>{
+        }).then((data) => {
+            this.lists_ref =new Array(data.data.length);
+            this.lists = data.data.map((element, index)=>{
                 this.lists_ref[index] = React.createRef();
                 return (
                     <List 
-                        key={`list#${index}`} 
-                        {...element} 
-                        closeLists={this.closeLists}
+                        key={`list#${element.id}`} 
+                        {...element}
                         ref={this.lists_ref[index]}
                         authorization_header={this.authorization_header}
                         base_url={this.props.base_url}
                         listRemoved={this.listRemoved}
+                        closeLists={this.closeLists}
                         />
                 );
             });
-            this.setState({lists: foo});
+            this.setState(this.state);
         }).catch((err)=>{
+            console.log(err);
             if(err === 401){
                 this.redirect('/auth');
-            }else{
-                this.redirect('/404');
             }
         });
     }
@@ -83,7 +82,7 @@ class Dashboard extends React.Component{
         this.lists.push(
             (<List 
                 key={`list#${this.lists_ref.length-1}`} 
-                {...data} 
+                {...data.data} 
                 closeLists={this.closeLists}
                 ref={this.lists_ref[this.lists_ref.length-1]}
                 authorization_header={this.authorization_header}
@@ -91,7 +90,13 @@ class Dashboard extends React.Component{
                 listRemoved={this.listRemoved}
             />)
         );
-        this.setState(this.state); 
+        this.setState({
+            messages: [{
+                title: 'New list:',
+                detail: String.raw`Created list #${data.data.id}`,
+                type:'good'
+            }]
+        });
         this.closeAddList();
     }
     closeLists(){
@@ -114,7 +119,7 @@ class Dashboard extends React.Component{
         if(this.state.redirect){return (<Redirect to={this.state.redirect_target} />);}
 		return (
             <div className={styles['dashboard-container']}>
-                <NotificationSystem messages={this.messages}/>
+                <NotificationSystem messages={this.state.messages || []}/>
                 <h1>Dashboard</h1>
                 <div className={styles['add-button-container']} onClick={this.handleAddButonClick}>
                     <FaPlus />
