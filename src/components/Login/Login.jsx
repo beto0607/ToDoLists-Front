@@ -33,18 +33,13 @@ class Login extends React.Component {
         return response.json();
       })
       .then(data => {
-        if (data.token) {
+          console.log(data);
+          
+        if (data.data) {
           saveLoginData(data);
           if (this.props.onSuccess) this.props.onSuccess(data);
         } else {
-          if (this.props.onError) {
-            if (data.error === "unauthorized") {
-              this.props.onError("Invalid credentials.");
-            } else {
-              this.props.onError("An unknown error has occurred.");
-            }
-            console.log(data);
-          }
+            this.props.onError(data.errors);
         }
       });
   }
@@ -75,8 +70,10 @@ class Login extends React.Component {
 export default Login;
 
 const saveLoginData = data => {
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("username", data.username);
-  localStorage.setItem("token_expires", data.exp);
-  localStorage.setItem("user_id", data.user_id);
+  localStorage.setItem("token", data.data.attributes.token);
+  localStorage.setItem("token_expires", data.data.attributes.exp);
+  localStorage.setItem("username", data.included[0].attributes.username);
+  localStorage.setItem("name", data.included[0].attributes.name);
+  localStorage.setItem("email", data.included[0].attributes.email);
+  localStorage.setItem("user_id", data.included[0].id);
 };
