@@ -37,6 +37,7 @@ class Dashboard extends React.Component{
         this.handleAddButonClick = this.handleAddButonClick.bind(this);
         this.closeAddList = this.closeAddList.bind(this);
         this.listAdded = this.listAdded.bind(this);
+        this.listRemoved = this.listRemoved.bind(this);
     }
     closeAddList(){
         this.setState({showListNew: false});
@@ -59,10 +60,11 @@ class Dashboard extends React.Component{
                     <List 
                         key={`list#${index}`} 
                         {...element} 
-                        items_count={12} 
-                        items_done={1} 
                         closeLists={this.closeLists}
                         ref={this.lists_ref[index]}
+                        authorization_header={this.authorization_header}
+                        base_url={this.props.base_url}
+                        listRemoved={this.listRemoved}
                         />
                 );
             });
@@ -81,10 +83,11 @@ class Dashboard extends React.Component{
             (<List 
                 key={`list#${this.lists_ref.length-1}`} 
                 {...data} 
-                items_count={12} 
-                items_done={1} 
                 closeLists={this.closeLists}
                 ref={this.lists_ref[this.lists_ref.length-1]}
+                authorization_header={this.authorization_header}
+                base_url={this.props.base_url}
+                listRemoved={this.listRemoved}
             />)
         );
         this.setState(this.state); 
@@ -95,6 +98,16 @@ class Dashboard extends React.Component{
     }
     handleAddButonClick(){
         this.setState({showListNew: true});
+    }
+    listRemoved(id){
+        this.lists = this.lists.filter((value, index, arr)=>{
+            if(value.props.id === id){
+                this.lists_ref.splice(index, 1); 
+                return false;
+            }
+            return true;
+        });
+        this.setState(this.state);
     }
 	render(){
         if(this.state.redirect){return (<Redirect to={this.state.redirect_target} />);}
@@ -110,7 +123,8 @@ class Dashboard extends React.Component{
                         base_url={this.props.base_url} 
                         close={this.closeAddList} 
                         listAdded={this.listAdded}
-                        authorization_header={this.authorization_header}/>
+                        authorization_header={this.authorization_header}
+                        />
                 )}
                 <div className={styles['lists-container']}>
                     {this.lists}
