@@ -6,6 +6,9 @@ import styles from "./List.module.scss";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
+import ListItem from "../ListItem";
+import LoadingSpinner from "../LoadingSpinner";
+
 import {
   FaExpandArrowsAlt,
   FaCompressArrowsAlt,
@@ -16,8 +19,10 @@ class List extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      opened: false
+      opened: false,
+      loadingItems: false
     };
+    this.items = null;
     this.close = this.close.bind(this);
     this.handleClickDiv = this.handleClickDiv.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
@@ -25,13 +30,22 @@ class List extends React.Component {
   handleClickDiv(e) {
     this.props.closeLists();
     if (
-      !e.target.closest("." + styles["delete-container"]) &&
-      (!this.state.opened || e.target.closest("." + styles["icon-container"]))
+      !e.target.closest("." + styles["delete-container"]) && //Not pressed delete-container or child
+      (!this.state.opened || //List is close
+        e.target.closest("." + styles["icon-container"])) //Not pressed icon-container or child
     ) {
-      this.setState({
+      let newState = {
         opened: !this.state.opened
-      });
+      };
+      if (!this.items) {
+        newState["loading-items"] = true;
+        this.loadItems();
+      }
+      this.setState(newState);
     }
+  }
+  loadItems() {
+
   }
   handleDeleteClick(e) {
     confirmAlert({
@@ -66,7 +80,13 @@ class List extends React.Component {
     });
   }
   render() {
-    const {title, due_date, description, items_done_count, items_count} = this.props.attributes;
+    const {
+      title,
+      due_date,
+      description,
+      items_done_count,
+      items_count
+    } = this.props.attributes;
     return (
       <div
         className={
@@ -86,19 +106,21 @@ class List extends React.Component {
         <strong>{title}</strong>
         <span>
           Due date:
-          {' '+(due_date ? new Date(due_date).toDateString() : "<unset>")}
+          {" " + (due_date ? new Date(due_date).toDateString() : "<unset>")}
         </span>
-        <span>
-          Items: {`${items_done_count}/${items_count}`}
-        </span>
+        <span>Items: {`${items_done_count}/${items_count}`}</span>
         {description && (
           <p>
-            Description: {description.substr(0, 120)+(description.length > 120 && "...")}
+            Description:{" "}
+            {description.substr(0, 120) + (description.length > 120 && "...")}
           </p>
         )}
         {this.state.opened && (
           <div>
-            <h1>opened</h1>
+              {
+                  this.state.loadingItems
+                }
+                <LoadingSpinner />
           </div>
         )}
       </div>
