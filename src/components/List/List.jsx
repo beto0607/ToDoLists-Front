@@ -6,7 +6,7 @@ import styles from "./List.module.scss";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
-import ListItem from "../ListItem";
+//import ListItem from "../ListItem";
 import LoadingSpinner from "../LoadingSpinner";
 
 import {
@@ -26,6 +26,7 @@ class List extends React.Component {
     this.close = this.close.bind(this);
     this.handleClickDiv = this.handleClickDiv.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.loadingRef = React.createRef();
   }
   handleClickDiv(e) {
     this.props.closeLists();
@@ -37,15 +38,20 @@ class List extends React.Component {
       let newState = {
         opened: !this.state.opened
       };
-      if (!this.items) {
-        newState["loading-items"] = true;
+      if (!this.items ) {
         this.loadItems();
       }
       this.setState(newState);
     }
   }
   loadItems() {
-
+    setTimeout(
+      () => {
+          this.setState({loadingItems: true});
+        },
+      1000,
+      this
+    );
   }
   handleDeleteClick(e) {
     confirmAlert({
@@ -80,6 +86,8 @@ class List extends React.Component {
     });
   }
   render() {
+      //console.log(this.state.loadingItems);
+      
     const {
       title,
       due_date,
@@ -95,34 +103,36 @@ class List extends React.Component {
           (this.state.opened && styles["opened"])
         }
         onClick={this.handleClickDiv}>
+
         <div className={styles["icon-container"]}>
           {this.state.opened ? <FaCompressArrowsAlt /> : <FaExpandArrowsAlt />}
         </div>
+
         <div
           className={styles["delete-container"]}
           onClick={this.handleDeleteClick}>
           <FaTrashAlt />
         </div>
+
         <strong>{title}</strong>
+
         <span>
           Due date:
-          {" " + (due_date ? new Date(due_date).toDateString() : "<unset>")}
+          {" " + (due_date ? new Date(due_date).toDateString() : "<empty>")}
         </span>
+
         <span>Items: {`${items_done_count}/${items_count}`}</span>
+
         {description && (
           <p>
             Description:{" "}
             {description.substr(0, 120) + (description.length > 120 && "...")}
           </p>
         )}
-        {this.state.opened && (
-          <div>
-              {
-                  this.state.loadingItems
-                }
-                <LoadingSpinner />
-          </div>
-        )}
+
+        <div>
+            <LoadingSpinner isShowing={this.state.loadingItems}/>
+        </div>
       </div>
     );
   }
