@@ -10,138 +10,155 @@ import ListItem from "../ListItem";
 import LoadingSpinner from "../LoadingSpinner";
 
 import {
-  FaExpandArrowsAlt,
-  FaCompressArrowsAlt,
-  FaTrashAlt
+    FaExpandArrowsAlt,
+    FaCompressArrowsAlt,
+    FaTrashAlt
 } from "react-icons/fa";
 
 class List extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      opened: false,
-      loadingItems: false
-    };
-    this.items = null;
-    this.close = this.close.bind(this);
-    this.handleClickDiv = this.handleClickDiv.bind(this);
-    this.handleDeleteClick = this.handleDeleteClick.bind(this);
-  }
-  handleClickDiv(e) {
-    this.props.closeLists();
-    if (
-      !e.target.closest("." + styles["delete-container"]) && //Not pressed delete-container or child
-      (!this.state.opened || //List is close
-        e.target.closest("." + styles["icon-container"])) //Not pressed icon-container or child
-    ) {
-      let newState = {
-        opened: !this.state.opened
-      };
-      if (!this.items || this.items.length == 0) {
-        this.loadItems();
-      }
-      this.setState(newState);
+    constructor(props) {
+        super(props);
+        this.state = {
+            opened: false,
+            loadingItems: false
+        };
+        this.items = null;
+        this.close = this.close.bind(this);
+        this.handleClickDiv = this.handleClickDiv.bind(this);
+        this.handleDeleteClick = this.handleDeleteClick.bind(this);
     }
-  }
-  loadItems() {
-    this.setState({loadingItems: true});
-      fetch(
-          this.props.base_url+"lists/"+this.props.id+"/items",
-          {
-              method: 'GET',
-            headers: this.props.authorization_header
+    handleClickDiv(e) {
+        this.props.closeLists();
+        if (
+            !e.target.closest("." + styles["delete-container"]) && //Not pressed delete-container or child
+            (!this.state.opened || //List is close
+                e.target.closest("." + styles["icon-container"])) //Not pressed icon-container or child
+        ) {
+            let newState = {
+                opened: !this.state.opened
+            };
+            if (!this.items || this.items.length == 0) {
+                this.loadItems();
             }
-      ).then(response =>{
-          console.log(response);
-        return response.json();
-      }).then(data=>{
-          this.items = data.data || [];
-          this.setState({loadingItems: false});
-      });
-  }
-  handleDeleteClick(e) {
-    confirmAlert({
-      title: "Are you sure?",
-      message: `This action will remove #${this.props.id} list permanently.`,
-      buttons: [
-        {
-          label: "Yes",
-          onClick: () => this.removeList()
-        },
-        {
-          label: "No"
+            this.setState(newState);
         }
-      ]
-    });
-  }
-  removeList() {
-    fetch(this.props.base_url + "lists/" + this.props.id, {
-      method: "DELETE",
-      headers: this.props.authorization_header
-    }).then(response => {
-      if (response.status === 204) {
-        this.props.listRemoved(this.props.id);
-      } else {
-        console.log(response);
-      }
-    });
-  }
-  close() {
-    this.setState({
-      opened: false
-    });
-  }
-  render() {
-    const {
-      title,
-      due_date,
-      description,
-      items_done_count,
-      items_count
-    } = this.props.attributes;
-    return (
-      <div
-        className={
-          styles["list-container"] +
-          " " +
-          (this.state.opened && styles["opened"])
-        }
-        onClick={this.handleClickDiv}>
+    }
+    loadItems() {
+        this.setState({ loadingItems: true });
+        fetch(this.props.base_url + "lists/" + this.props.id + "/items", {
+            method: "GET",
+            headers: this.props.authorization_header
+        })
+            .then(response => {
+                console.log(response);
+                return response.json();
+            })
+            .then(data => {
+                this.items = data.data || [];
+                this.setState({ loadingItems: false });
+            });
+    }
+    handleDeleteClick(e) {
+        confirmAlert({
+            title: "Are you sure?",
+            message: `This action will remove #${
+                this.props.id
+            } list permanently.`,
+            buttons: [
+                {
+                    label: "Yes",
+                    onClick: () => this.removeList()
+                },
+                {
+                    label: "No"
+                }
+            ]
+        });
+    }
+    removeList() {
+        fetch(this.props.base_url + "lists/" + this.props.id, {
+            method: "DELETE",
+            headers: this.props.authorization_header
+        }).then(response => {
+            if (response.status === 204) {
+                this.props.listRemoved(this.props.id);
+            } else {
+                console.log(response);
+            }
+        });
+    }
+    close() {
+        this.setState({
+            opened: false
+        });
+    }
+    render() {
+        const {
+            title,
+            due_date,
+            description,
+            items_done_count,
+            items_count
+        } = this.props.attributes;
+        return (
+            <div
+                className={
+                    styles["list-container"] +
+                    " " +
+                    (this.state.opened && styles["opened"])
+                }
+                onClick={this.handleClickDiv}>
+                <div className={styles["icon-container"]}>
+                    {this.state.opened ? (
+                        <FaCompressArrowsAlt />
+                    ) : (
+                        <FaExpandArrowsAlt />
+                    )}
+                </div>
 
-        <div className={styles["icon-container"]}>
-          {this.state.opened ? <FaCompressArrowsAlt /> : <FaExpandArrowsAlt />}
-        </div>
+                <div
+                    className={styles["delete-container"]}
+                    onClick={this.handleDeleteClick}>
+                    <FaTrashAlt />
+                </div>
 
-        <div
-          className={styles["delete-container"]}
-          onClick={this.handleDeleteClick}>
-          <FaTrashAlt />
-        </div>
+                <strong>{title}</strong>
 
-        <strong>{title}</strong>
+                <span>
+                    Due date:
+                    {" " +
+                        (due_date
+                            ? new Date(due_date).toDateString()
+                            : "<empty>")}
+                </span>
 
-        <span>
-          Due date:
-          {" " + (due_date ? new Date(due_date).toDateString() : "<empty>")}
-        </span>
+                <span>Items: {`${items_done_count}/${items_count}`}</span>
 
-        <span>Items: {`${items_done_count}/${items_count}`}</span>
+                {description && (
+                    <p>
+                        Description:{" "}
+                        {description.substr(0, 120) +
+                            (description.length > 120 && "...")}
+                    </p>
+                )}
 
-        {description && (
-          <p>
-            Description:{" "}
-            {description.substr(0, 120) + (description.length > 120 && "...")}
-          </p>
-        )}
-
-        {this.state.opened && <div>
-            <LoadingSpinner isShowing={this.state.loadingItems}/>
-            <ul>
-                {(this.items||[]).map((elements) => (<ListItem key={`List#${this.props.id}_Item#${elements.id}`} {...elements}/>))}
-            </ul>
-        </div>}
-      </div>
-    );
-  }
+                {this.state.opened && (
+                    <div>
+                        <LoadingSpinner isShowing={this.state.loadingItems} />
+                        <ul>
+                            {(this.items || []).map(elements => (
+                                <ListItem
+                                    key={`List#${this.props.id}_Item#${
+                                        elements.id
+                                    }`}
+                                    {...elements}
+                                />
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
+        );
+    }
 }
 export default List;

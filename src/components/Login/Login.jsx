@@ -6,75 +6,75 @@ import React from "react";
 import styles from "./Login.module.scss";
 
 class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      url: this.props.base_url + "auth/login"
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleSubmit(e) {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    const json_data = {
-      auth: {
-        email: data.get("email"),
-        password: data.get("password")
-      }
-    };
-    fetch(this.state.url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(json_data)
-    })
-      .then(function(response) {
-        return response.json();
-      })
-      .then(data => {
-        if (data.data) {
-          saveLoginData(data);
-          if (this.props.onSuccess) this.props.onSuccess(data);
-        } else {
-          this.props.onError(data.errors);
-        }
-      })
-      .catch((err) => {
-        console.log(err.code);
-      });
-  }
-  render() {
-    return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <div className={styles["input-container"]}>
-            <label htmlFor="email">Email:</label>
-            <input type="email" name="email" id="login-email" />
-          </div>
-          <div className={styles["input-container"]}>
-            <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              name="password"
-              minLength="6"
-              maxLength="20"
-              id="login-password"
-            />
-          </div>
-          <input type="submit" value="Login" />
-        </form>
-      </div>
-    );
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            url: this.props.base_url + "auth/login"
+        };
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    handleSubmit(e) {
+        e.preventDefault();
+        const data = new FormData(e.target);
+        const json_data = {
+            auth: {
+                email: data.get("email"),
+                password: data.get("password")
+            }
+        };
+        fetch(this.state.url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(json_data)
+        })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(data => {
+                if (data.data) {
+                    saveLoginData(data);
+                    if (this.props.onSuccess) this.props.onSuccess(data);
+                } else {
+                    this.props.onError(data.errors);
+                }
+            })
+            .catch(err => {
+                console.log(err.code);
+            });
+    }
+    render() {
+        return (
+            <div>
+                <form onSubmit={this.handleSubmit}>
+                    <div className={styles["input-container"]}>
+                        <label htmlFor="email">Email:</label>
+                        <input type="email" name="email" id="login-email" />
+                    </div>
+                    <div className={styles["input-container"]}>
+                        <label htmlFor="password">Password:</label>
+                        <input
+                            type="password"
+                            name="password"
+                            minLength="6"
+                            maxLength="20"
+                            id="login-password"
+                        />
+                    </div>
+                    <input type="submit" value="Login" />
+                </form>
+            </div>
+        );
+    }
 }
 export default Login;
 
 const saveLoginData = data => {
-  localStorage.setItem("token", data.data.attributes.token);
-  localStorage.setItem("token_expires", data.data.attributes.exp);
-  localStorage.setItem("username", data.included[0].attributes.username);
-  localStorage.setItem("name", data.included[0].attributes.name);
-  localStorage.setItem("email", data.included[0].attributes.email);
-  localStorage.setItem("user_id", data.included[0].id);
+    localStorage.setItem("token", data.data.attributes.token);
+    localStorage.setItem("token_expires", data.data.attributes.exp);
+    localStorage.setItem("username", data.included[0].attributes.username);
+    localStorage.setItem("name", data.included[0].attributes.name);
+    localStorage.setItem("email", data.included[0].attributes.email);
+    localStorage.setItem("user_id", data.included[0].id);
 };

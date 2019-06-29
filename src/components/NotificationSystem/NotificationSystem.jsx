@@ -6,42 +6,44 @@
  * each message must have a type(good or error), a title and a detail
  */
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import styles from "./NotificationSystem.module.scss";
 
 const Message = props => (
-  <div className={styles[props.type + "-messages"]}>
-    <strong>{props.title} </strong>
-    <span>{props.detail}</span>
-  </div>
+    <div className={styles[props.type + "-messages"]}>
+        <strong>{props.title} </strong>
+        <span>{props.detail}</span>
+    </div>
 );
 
 class NotificationSystem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.messagesCount = 0;
-  }
+    constructor(props) {
+        super(props);
+        this.messagesCount = 0;
+    }
 
-  render() {
-    return (
-      <div className={styles["container"]}>
-        {this.props.messages.map(e => {
-          this.messagesCount++;
-          return <Message {...e} key={"message#" + this.messagesCount} />;
-        })}
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className={styles["container"]}>
+                {this.props.messages.map(e => {
+                    this.messagesCount++;
+                    return (
+                        <Message {...e} key={"message#" + this.messagesCount} />
+                    );
+                })}
+            </div>
+        );
+    }
 }
 NotificationSystem.propTypes = {
-  messages: PropTypes.arrayOf(
-      PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        detail: PropTypes.string.isRequired,
-        type: PropTypes.string,
-      }).isRequired
-  ).isRequired
+    messages: PropTypes.arrayOf(
+        PropTypes.shape({
+            title: PropTypes.string.isRequired,
+            detail: PropTypes.string.isRequired,
+            type: PropTypes.string
+        }).isRequired
+    ).isRequired
 };
 
 export default NotificationSystem;

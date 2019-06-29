@@ -6,57 +6,61 @@ import styles from "./Layout.module.scss";
 import github from "../../images/github.png";
 import resume from "../../images/resume.png";
 class Footer extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+    constructor(props) {
+        super(props);
+    }
 
-  render() {
-    return (
-      <footer className={styles.footer}>
-        {this.props.children || [
-          <div className={styles["code-container"]}>
-            <div>
-              <a
-                href="https://github.com/beto0607/ToDoLists-Front"
-                target="_blank">
-                <img src={github} alt="Github" />
-                <span>Frontend</span>
-              </a>
-            </div>
-            <div>
-              <a href="https://github.com/beto0607/ToDoList" target="_blank">
-                <img src={github} alt="Github" />
-                <span>Backend</span>
-              </a>
-            </div>
-          </div>,
-          <div className={styles["portfolio-container"]}>
-            <div>
-              <a href="https://www.alroj.tech/" target="_blank">
-                <img src={resume} alt="Resume" />
-                <span>Resume</span>
-              </a>
-            </div>
-          </div>,
-          <div className={styles["credits-container"]}>
-            <p>
-              {"Author: "}
-              <a href="https://github.com/beto0607" target="_blank">
-                @beto0607
-              </a>
-            </p>
-            <p>
-              {"Email: "}
-              <a
-                href="mailto:albanesi.roberto.javier@gmail.com"
-                target="_blank">
-                albanesi.roberto.javier@gmail.com
-              </a>
-            </p>
-          </div>
-        ]}
-      </footer>
-    );
-  }
+    render() {
+        return (
+            <footer className={styles.footer}>
+                {this.props.children || [
+                    <div className={styles["code-container"]}>
+                        <div>
+                            <a
+                                href="https://github.com/beto0607/ToDoLists-Front"
+                                target="_blank">
+                                <img src={github} alt="Github" />
+                                <span>Frontend</span>
+                            </a>
+                        </div>
+                        <div>
+                            <a
+                                href="https://github.com/beto0607/ToDoList"
+                                target="_blank">
+                                <img src={github} alt="Github" />
+                                <span>Backend</span>
+                            </a>
+                        </div>
+                    </div>,
+                    <div className={styles["portfolio-container"]}>
+                        <div>
+                            <a href="https://www.alroj.tech/" target="_blank">
+                                <img src={resume} alt="Resume" />
+                                <span>Resume</span>
+                            </a>
+                        </div>
+                    </div>,
+                    <div className={styles["credits-container"]}>
+                        <p>
+                            {"Author: "}
+                            <a
+                                href="https://github.com/beto0607"
+                                target="_blank">
+                                @beto0607
+                            </a>
+                        </p>
+                        <p>
+                            {"Email: "}
+                            <a
+                                href="mailto:albanesi.roberto.javier@gmail.com"
+                                target="_blank">
+                                albanesi.roberto.javier@gmail.com
+                            </a>
+                        </p>
+                    </div>
+                ]}
+            </footer>
+        );
+    }
 }
 export default Footer;
