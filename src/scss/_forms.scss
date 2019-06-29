@@ -1,28 +1,29 @@
-form{
+form {
     text-align: center;
-    .input-container{
+    .input-container {
         margin: auto;
         max-width: 200px;
         text-align: left;
-        label{
+        label {
             text-transform: capitalize;
             display: block;
             margin: 20px 0 5px 0;
         }
-        input{
+        input {
             display: block;
             width: 90%;
             outline: none;
             margin: 5px auto 20px auto;
             border: 1px solid rgb(141, 141, 141);
         }
-        &.with-errors{
+        &.with-errors {
             border: 2px solid red;
-            input, textarea{
-                border-color:red;
+            input,
+            textarea {
+                border-color: red;
             }
         }
-        textarea{
+        textarea {
             display: block;
             margin: 5px auto 20px auto;
             outline: none;
@@ -30,6 +31,6 @@ form{
             width: 90%;
             height: 3em;
             border: 1px solid rgb(141, 141, 141);
-        }        
+        }
     }
 }

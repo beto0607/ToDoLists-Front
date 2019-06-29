@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import './scss/_main.scss';
 import App from './App';
-import Authentication from './containers/Authentication';
-import Dashboard from './containers/Dashboard';
-import NotFound from './containers/NotFound';
+import Authentication from './pages/Authentication';
+import Dashboard from './pages/Dashboard';
+import NotFound from './pages/NotFound';
 import * as serviceWorker from './serviceWorker';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
 
