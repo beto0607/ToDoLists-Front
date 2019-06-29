@@ -4,6 +4,7 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 
+import Layout from "../../layouts/Layout";
 import List from "../../components/List";
 import ListNew from "../../components/ListNew";
 import styles from "./Dashboard.module.scss";
@@ -132,24 +133,27 @@ class Dashboard extends React.Component {
             return <Redirect to={this.state.redirect_target} />;
         }
         return (
-            <div className={styles["dashboard-container"]}>
-                <NotificationSystem messages={this.state.messages || []} />
-                <h1>Dashboard</h1>
-                <div
-                    className={styles["add-button-container"]}
-                    onClick={this.handleAddButonClick}>
-                    <FaPlus />
+            <Layout header_props={{title: 'Dashboard'}}>
+                <div className={styles["dashboard-container"]}>
+                    <NotificationSystem messages={this.state.messages || []} />
+                    <div
+                        className={styles["add-button-container"]}
+                        onClick={this.handleAddButonClick}>
+                        <FaPlus />
+                    </div>
+                    {this.state.showListNew && (
+                        <ListNew
+                            base_url={this.props.base_url}
+                            close={this.closeAddList}
+                            listAdded={this.listAdded}
+                            authorization_header={this.authorization_header}
+                        />
+                    )}
+                    <div className={styles["lists-container"]}>
+                        {this.lists}
+                    </div>
                 </div>
-                {this.state.showListNew && (
-                    <ListNew
-                        base_url={this.props.base_url}
-                        close={this.closeAddList}
-                        listAdded={this.listAdded}
-                        authorization_header={this.authorization_header}
-                    />
-                )}
-                <div className={styles["lists-container"]}>{this.lists}</div>
-            </div>
+            </Layout>
         );
     }
 }

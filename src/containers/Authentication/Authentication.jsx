@@ -15,7 +15,7 @@ class Authentication extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showing: document.location.hash.split('#')[1] || 'login',
+            showing: document.location.hash.split("#")[1] || "login",
             base_url: "http://localhost:3001/",
             messages: [],
             redirect_target: null,
@@ -83,9 +83,11 @@ class Authentication extends React.Component {
         this.setState({ showing: "register" });
     }
     render() {
-        if(this.state.redirect){return (<Redirect to={this.state.redirect_target} />);}
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect_target} />;
+        }
         return (
-            <Layout header_props={{title:'Authentication'}}>
+            <Layout header_props={{ title: "Authentication" }}>
                 <div className={styles.container}>
                     <div className={styles["options-selector"]}>
                         <a
