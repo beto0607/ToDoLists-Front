@@ -8,7 +8,8 @@
     background: white;
     padding: $list-padding;
     grid-row: auto / span 1;
-    transition: 200ms;
+    transition-duration: 200ms;
+    
 
     span, strong, p{
         display: block;
@@ -18,14 +19,13 @@
         display: none;
     }
     &.opened{
-        background: rgb(211, 140, 34);
+        color: white;
+        background: rgb(77, 77, 77);
         z-index: 1;
         cursor: default;
         height: $list-padding * 2 + $list-height * 2 + $dashboard-grid-gap;
-//        transform: translate3d(50%,50%,10px);
         margin: auto -5px;
         transform: translate3d(0, calc(25% - #{$list-padding + $list-height}), 200px) perspective(120px);
-
     }
     
     .icon-container, .delete-container{

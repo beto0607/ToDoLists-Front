@@ -19,7 +19,10 @@ class Dashboard extends React.Component{
             !localStorage.getItem('token') || //User not logged in
             new Date(localStorage.getItem('token_expires')) < new Date()//Token expired
         ){
-            this.redirect('/auth');
+            this.state = {
+                redirect: true,
+                redirect_target: '/auth'
+            };
         }else{
             this.state = {
                 user_lists_url: props.base_url+`users/${localStorage.getItem('user_id')}/lists`,
@@ -34,12 +37,12 @@ class Dashboard extends React.Component{
                 'Content-type':'application/json',
                 'Authorization': String.raw`Basic ${this.state.user_token}`
             });
+            this.closeLists = this.closeLists.bind(this);
+            this.handleAddButonClick = this.handleAddButonClick.bind(this);
+            this.closeAddList = this.closeAddList.bind(this);
+            this.listAdded = this.listAdded.bind(this);
+            this.listRemoved = this.listRemoved.bind(this);
         }
-        this.closeLists = this.closeLists.bind(this);
-        this.handleAddButonClick = this.handleAddButonClick.bind(this);
-        this.closeAddList = this.closeAddList.bind(this);
-        this.listAdded = this.listAdded.bind(this);
-        this.listRemoved = this.listRemoved.bind(this);
     }
     closeAddList(){
         this.setState({showListNew: false});
