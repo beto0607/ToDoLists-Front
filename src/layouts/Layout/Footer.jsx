@@ -6,10 +6,6 @@ import styles from "./Layout.module.scss";
 import github from "../../images/github.png";
 import resume from "../../images/resume.png";
 class Footer extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <footer className={styles.footer}>
@@ -18,7 +14,7 @@ class Footer extends React.Component {
                         <div>
                             <a
                                 href="https://github.com/beto0607/ToDoLists-Front"
-                                target="_blank">
+                                target="_blank" rel="noopener noreferrer">
                                 <img src={github} alt="Github" />
                                 <span>Frontend</span>
                             </a>
@@ -26,7 +22,7 @@ class Footer extends React.Component {
                         <div>
                             <a
                                 href="https://github.com/beto0607/ToDoList"
-                                target="_blank">
+                                target="_blank" rel="noopener noreferrer">
                                 <img src={github} alt="Github" />
                                 <span>Backend</span>
                             </a>
@@ -34,7 +30,7 @@ class Footer extends React.Component {
                     </div>,
                     <div className={styles["portfolio-container"]}>
                         <div>
-                            <a href="https://www.alroj.tech/" target="_blank">
+                            <a href="https://www.alroj.tech/" target="_blank" rel="noopener noreferrer">
                                 <img src={resume} alt="Resume" />
                                 <span>Resume</span>
                             </a>
@@ -45,7 +41,7 @@ class Footer extends React.Component {
                             {"Author: "}
                             <a
                                 href="https://github.com/beto0607"
-                                target="_blank">
+                                target="_blank" rel="noopener noreferrer">
                                 @beto0607
                             </a>
                         </p>
@@ -53,7 +49,7 @@ class Footer extends React.Component {
                             {"Email: "}
                             <a
                                 href="mailto:albanesi.roberto.javier@gmail.com"
-                                target="_blank">
+                                target="_blank" rel="noopener noreferrer">
                                 albanesi.roberto.javier@gmail.com
                             </a>
                         </p>
