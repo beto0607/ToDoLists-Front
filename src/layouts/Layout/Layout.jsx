@@ -9,7 +9,7 @@ class Layout extends React.Component{
 	render(){
 		return (
             <div className={styles.container}>
-                <Header>
+                <Header title="Layout">
                     {this.props.header || null}
                 </Header>
                 <main className={styles.main}>

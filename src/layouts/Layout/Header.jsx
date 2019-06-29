@@ -3,14 +3,52 @@
 
 import React from "react";
 import styles from "./Layout.module.scss";
+import logo from "../../logo.svg";
 
 class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.links = this.props.links || [
+      {
+        title: "Home",
+        url: "/"
+      },
+      {
+        title: "Login",
+        url: "/auth#login"
+      },
+      {
+        title: "Register",
+        url: "/auth#register"
+      },
+      {
+        title: "Dashboard",
+        url: "/dashboard"
+      }
+    ];
+  }
   render() {
     return (
       <header className={styles.header}>
         {this.props.children || [
-          <img className={styles.logo} key="logo_image" alt="Logo"/>,
-          <nav key="nav_bar">Bananas</nav>
+          <img
+            className={styles.logo}
+            key="logo_image"
+            alt="Logo"
+            src={logo}
+          />,
+          <span className={styles.title}>
+              {this.props.title || 'Title'}
+          </span>,
+          <nav key="nav_bar">
+            <ul>
+              {this.links.map(element => (
+                <li key={`link_to_${element.title.toLowerCase()}`}>
+                  <a href={element.url}>{element.title}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         ]}
       </header>
     );
