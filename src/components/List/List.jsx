@@ -6,7 +6,7 @@ import styles from "./List.module.scss";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
-//import ListItem from "../ListItem";
+import ListItem from "../ListItem";
 import LoadingSpinner from "../LoadingSpinner";
 
 import {
@@ -26,7 +26,6 @@ class List extends React.Component {
     this.close = this.close.bind(this);
     this.handleClickDiv = this.handleClickDiv.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
-    this.loadingRef = React.createRef();
   }
   handleClickDiv(e) {
     this.props.closeLists();
@@ -38,20 +37,27 @@ class List extends React.Component {
       let newState = {
         opened: !this.state.opened
       };
-      if (!this.items ) {
+      if (!this.items || this.items.length == 0) {
         this.loadItems();
       }
       this.setState(newState);
     }
   }
   loadItems() {
-    setTimeout(
-      () => {
-          this.setState({loadingItems: true});
-        },
-      1000,
-      this
-    );
+    this.setState({loadingItems: true});
+      fetch(
+          this.props.base_url+"lists/"+this.props.id+"/items",
+          {
+              method: 'GET',
+            headers: this.props.authorization_header
+            }
+      ).then(response =>{
+          console.log(response);
+        return response.json();
+      }).then(data=>{
+          this.items = data.data || [];
+          this.setState({loadingItems: false});
+      });
   }
   handleDeleteClick(e) {
     confirmAlert({
@@ -86,8 +92,6 @@ class List extends React.Component {
     });
   }
   render() {
-      //console.log(this.state.loadingItems);
-      
     const {
       title,
       due_date,
@@ -130,9 +134,12 @@ class List extends React.Component {
           </p>
         )}
 
-        <div>
+        {this.state.opened && <div>
             <LoadingSpinner isShowing={this.state.loadingItems}/>
-        </div>
+            <ul>
+                {(this.items||[]).map((elements) => (<ListItem key={`List#${this.props.id}_Item#${elements.id}`} {...elements}/>))}
+            </ul>
+        </div>}
       </div>
     );
   }

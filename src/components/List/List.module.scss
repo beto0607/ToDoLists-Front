@@ -8,7 +8,8 @@
     background: white;
     padding: $list-padding;
     grid-row: auto / span 1;
-    transition: 200ms;
+    transition-duration: 200ms;
+    
 
     span, strong, p{
         display: block;
@@ -25,7 +26,6 @@
         height: $list-padding * 2 + $list-height * 2 + $dashboard-grid-gap;
         margin: auto -5px;
         transform: translate3d(0, calc(25% - #{$list-padding + $list-height}), 200px) perspective(120px);
-
     }
     
     .icon-container, .delete-container{
