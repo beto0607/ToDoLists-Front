@@ -3,15 +3,18 @@
 
 import React from 'react';
 import styles from './NotFound.module.scss';
+import Layout from '../../layouts/Layout';
 
 class NotFound extends React.Component{
 
 	render(){
 		return (
-			<div className={styles.container}>
-				<h1>404 - Not Found</h1>
-				<p>We couldn't find this page</p>
-			</div>
+            <Layout>
+                <div className={styles.container}>
+                    <h1>404 - Not Found</h1>
+                    <p>We couldn't find this page</p>
+                </div>
+            </Layout>
 		);
 	}
 

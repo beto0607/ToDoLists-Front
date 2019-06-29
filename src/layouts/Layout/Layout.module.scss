@@ -54,7 +54,8 @@
     .main{
         grid-row: 2;
         background: blue;
-        min-height: calc(100% - 180px);
+        min-height: calc(100vh - 180px);
+        display: flex;
     }
     .footer{
         grid-row: 3;
