@@ -4,7 +4,7 @@
 import React from 'react';
 import styles from './Layout.module.scss';
 import Header from './Header';
-
+import Footer from './Footer';
 class Layout extends React.Component{
 	render(){
 		return (
@@ -19,11 +19,8 @@ class Layout extends React.Component{
                         null
                     }
                 </main>
-                <footer>
-                    {
-                        this.props.footer || null
-                    }
-                </footer>
+                <Footer/>
+                
             </div>
         );
 	}

@@ -7,7 +7,6 @@
     width: 100vw;
     .header{
         grid-row: 1;
-        background: red;
         display: flex;
         justify-content: space-between;
         height: 80px;
@@ -55,10 +54,34 @@
     .main{
         grid-row: 2;
         background: blue;
-        height: calc(100% - 180px);
+        min-height: calc(100% - 180px);
     }
     .footer{
         grid-row: 3;
         background: gray;
+        display: flex;
+        justify-content: space-between;
+        .code-container,.portfolio-container{
+            margin:auto;
+            display: flex;
+            div{
+                display: inline-block;
+                text-align: center;
+                padding: 10px;
+                a{
+                    color: blue;
+                    img{
+                        height: 30px;
+                        width: 30px;
+                    }
+                    span{
+                        display: block;
+                    }
+                }
+            }
+        }
+        .credits-container{
+            margin:auto;
+        }
     }
 }
