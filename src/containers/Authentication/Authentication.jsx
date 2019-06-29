@@ -8,7 +8,7 @@ import styles from "./Authentication.module.scss";
 
 import Login from "../../components/Login";
 import Register from "../../components/Register";
-
+import Layout from "../../layouts/Layout";
 import NotificationSystem from "../../components/NotificationSystem";
 
 class Authentication extends React.Component {
@@ -85,47 +85,49 @@ class Authentication extends React.Component {
     }
     render() {
         return (
-            <div className={styles.container}>
-                {this.state.redirect ? (
-                    <Redirect to={this.state.redirect_target} />
-                ) : null}
+            <Layout header_props={{title:'Authentication'}}>
+                <div className={styles.container}>
+                    {this.state.redirect ? (
+                        <Redirect to={this.state.redirect_target} />
+                    ) : null}
 
-                <div className={styles["options-selector"]}>
-                    <a
-                        href="#login"
-                        onClick={this.handleLoginClick}
-                        className={
-                            this.state.showing === "login"
-                                ? styles.active
-                                : null
-                        }>
-                        Login
-                    </a>
-                    <a
-                        href="#register"
-                        onClick={this.handleRegisterClick}
-                        className={
-                            this.state.showing === "register"
-                                ? styles.active
-                                : null
-                        }>
-                        Register
-                    </a>
+                    <div className={styles["options-selector"]}>
+                        <a
+                            href="#login"
+                            onClick={this.handleLoginClick}
+                            className={
+                                this.state.showing === "login"
+                                    ? styles.active
+                                    : null
+                            }>
+                            Login
+                        </a>
+                        <a
+                            href="#register"
+                            onClick={this.handleRegisterClick}
+                            className={
+                                this.state.showing === "register"
+                                    ? styles.active
+                                    : null
+                            }>
+                            Register
+                        </a>
+                    </div>
+                    <div className={styles["options-container"]}>
+                        <NotificationSystem messages={this.state.messages} />
+                        {this.state.showing === "login" && (
+                            <Login
+                                base_url={this.state.base_url}
+                                onSuccess={this.loginSuccess}
+                                onError={this.loginError}
+                            />
+                        )}
+                        {this.state.showing === "register" && (
+                            <Register base_url={this.state.base_url} />
+                        )}
+                    </div>
                 </div>
-                <div className={styles["options-container"]}>
-                    <NotificationSystem messages={this.state.messages} />
-                    {this.state.showing === "login" && (
-                        <Login
-                            base_url={this.state.base_url}
-                            onSuccess={this.loginSuccess}
-                            onError={this.loginError}
-                        />
-                    )}
-                    {this.state.showing === "register" && (
-                        <Register base_url={this.state.base_url} />
-                    )}
-                </div>
-            </div>
+            </Layout>
         );
     }
 }
