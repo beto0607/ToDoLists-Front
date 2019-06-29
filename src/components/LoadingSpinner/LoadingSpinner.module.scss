@@ -7,11 +7,11 @@ $back-border-color: rgb(51, 51, 51);
 $before-border-color: rgba(225, 46, 241, 0.9);
 $after-border-color: rgba(38, 170, 21, 0.9);
 $loading-box-shadow-color: rgba(9, 0, 49, 0.356);
-.container{
+.container {
     margin: auto;
     padding: 20%;
     transform: scale(0.7);
-    .loading-container{
+    .loading-container {
         position: relative;
         margin: auto;
         width: 150px;
@@ -29,9 +29,9 @@ $loading-box-shadow-color: rgba(9, 0, 49, 0.356);
         text-shadow: 0 0 3px $loading-shadow-color;
         box-shadow: 0 0 20px $loading-box-shadow-color;
 
-        &:before{
-            content: '';
-            position: absolute; 
+        &:before {
+            content: "";
+            position: absolute;
             top: -3px;
             left: -3px;
             width: 150px;
@@ -43,9 +43,9 @@ $loading-box-shadow-color: rgba(9, 0, 49, 0.356);
             animation: animateCircle 8s linear infinite reverse;
             opacity: 0.7;
         }
-        &:after{
-            content: '';
-            position: absolute; 
+        &:after {
+            content: "";
+            position: absolute;
             top: -3px;
             left: -3px;
             width: 150px;
@@ -58,10 +58,10 @@ $loading-box-shadow-color: rgba(9, 0, 49, 0.356);
             opacity: 0.7;
         }
         @keyframes animateCircle {
-            0%{
+            0% {
                 transform: rotate(0deg);
             }
-            100%{
+            100% {
                 transform: rotate(360deg);
             }
         }
