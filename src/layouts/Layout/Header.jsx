@@ -37,7 +37,7 @@ class Header extends React.Component {
                         alt="Logo"
                         src={logo}
                     />,
-                    <span className={styles.title}>
+                    <span className={styles.title} key="header_title">
                         {this.props.title || "Title"}
                     </span>,
                     <nav key="nav_bar">

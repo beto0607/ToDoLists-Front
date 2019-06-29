@@ -10,7 +10,7 @@ class Footer extends React.Component {
         return (
             <footer className={styles.footer}>
                 {this.props.children || [
-                    <div className={styles["code-container"]}>
+                    <div className={styles["code-container"]} key="footer_code_container">
                         <div>
                             <a
                                 href="https://github.com/beto0607/ToDoLists-Front"
@@ -28,7 +28,7 @@ class Footer extends React.Component {
                             </a>
                         </div>
                     </div>,
-                    <div className={styles["portfolio-container"]}>
+                    <div className={styles["portfolio-container"]} key="footer_portfolio_container">
                         <div>
                             <a href="https://www.alroj.tech/" target="_blank" rel="noopener noreferrer">
                                 <img src={resume} alt="Resume" />
@@ -36,7 +36,7 @@ class Footer extends React.Component {
                             </a>
                         </div>
                     </div>,
-                    <div className={styles["credits-container"]}>
+                    <div className={styles["credits-container"]} key="footer_credits_container">
                         <p>
                             {"Author: "}
                             <a
