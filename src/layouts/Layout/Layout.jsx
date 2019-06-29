@@ -9,11 +9,11 @@ class Layout extends React.Component {
     render() {
         return (
             <div className={styles.container}>
-                <Header title="Layout">{this.props.header || null}</Header>
+                <Header title="Layout" {...this.props.header_props}>{this.props.header || null}</Header>
                 <main className={styles.main}>
                     {this.props.main || this.props.children || null}
                 </main>
-                <Footer />
+                <Footer {...this.props.footer_props}/>
             </div>
         );
     }
