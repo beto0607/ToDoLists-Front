@@ -14,9 +14,8 @@ import NotificationSystem from "../../components/NotificationSystem";
 class Authentication extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
-            showing: "login",
+            showing: document.location.hash.split('#')[1] || 'login',
             base_url: "http://localhost:3001/",
             messages: [],
             redirect_target: null,
@@ -84,13 +83,10 @@ class Authentication extends React.Component {
         this.setState({ showing: "register" });
     }
     render() {
+        if(this.state.redirect){return (<Redirect to={this.state.redirect_target} />);}
         return (
             <Layout header_props={{title:'Authentication'}}>
                 <div className={styles.container}>
-                    {this.state.redirect ? (
-                        <Redirect to={this.state.redirect_target} />
-                    ) : null}
-
                     <div className={styles["options-selector"]}>
                         <a
                             href="#login"
