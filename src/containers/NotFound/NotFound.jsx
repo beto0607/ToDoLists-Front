@@ -8,7 +8,7 @@ import Layout from "../../layouts/Layout";
 class NotFound extends React.Component {
     render() {
         return (
-            <Layout>
+            <Layout header_props={{title: 'Not found'}}>
                 <div className={styles.container}>
                     <h1>404 - Not Found</h1>
                     <p>We couldn't find this page</p>
