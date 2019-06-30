@@ -37,7 +37,7 @@ class List extends React.Component {
             let newState = {
                 opened: !this.state.opened
             };
-            if (!this.items || this.items.length == 0) {
+            if (!this.items || this.items.length === 0) {
                 this.loadItems();
             }
             this.setState(newState);
