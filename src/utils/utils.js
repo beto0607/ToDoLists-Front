@@ -25,26 +25,27 @@ const headers = new Headers({
     "Authorization": String.raw`Basic ${getToken()}`
 });
 
-const fromAPI = (url, data={},success, error, method='GET') => {
-    fetch(url,
-        {
-            method: method,
-            headers: headers,
-            body: JSON.stringify(data)
-        }
-    )
+const fromAPI = (url, data = {}, success, error, method = 'GET') => {
+    const info = {
+        method: method,
+        headers: headers
+    };
+    if(data){
+        info.body = JSON.stringify(data);
+    }
+    fetch(url, info)
         .then(response => response.json())
-        .then( data => success(data))
+        .then(data => success(data))
         .catch(err => error(err));
 }
-export const doGET = (url, success, error) => fromAPI(url, success, error, 'GET');
+export const doGET = (url, success, error) => fromAPI(url, null, success, error, 'GET');
 export const doPOST = (url, data, success, error) => fromAPI(url, data, success, error, 'POST');
 export const doPUT = (url, data, success, error) => fromAPI(url, data, success, error, 'PUT');
 export const doPATCH = (url, data, success, error) => fromAPI(url, data, success, error, 'PATCH');
 export const doDELETE = (url, success, error) => fromAPI(url, success, error, 'DELETE');
 
 //URLs GETTERS
-const API_URL_BASE = (process && process.env.API_URL_BASE) ||'http://localhost:3001/';
+const API_URL_BASE = (process && process.env.API_URL_BASE) || 'http://localhost:3001/';
 
 //AUTH - POST
 export const getLoginURL = () => String.raw`${API_URL_BASE}auth/login`;
@@ -53,7 +54,7 @@ export const getUsersURL = () => String.raw`${API_URL_BASE}users`;
 //USER - GET(show), PUT, PATCH, DELETE
 export const getUserURL = (userID) => String.raw`${getUsersURL()}/${userID}`;
 //LIST - GET(index), POST
-export const getUserListsURL = (userID) => String.raw`${getUsersURL(userID)}/lists`;
+export const getUserListsURL = (userID) => String.raw`${getUserURL(userID)}/lists`;
 //LIST - GET(show), DELETE, PATCH, PUT
 export const getListURL = (listID) => String.raw`${API_URL_BASE}lists/${listID}`;
 //ITEM - GET(index), POST
