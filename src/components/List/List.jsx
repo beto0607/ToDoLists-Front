@@ -8,7 +8,12 @@ import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
 import ListItem from "../ListItem";
 import LoadingSpinner from "../LoadingSpinner";
-
+import {
+    doGET,
+    getListItemsURL,
+    doDELETE,
+    getListURL
+} from "../../utils/utils";
 import {
     FaExpandArrowsAlt,
     FaCompressArrowsAlt,
@@ -26,6 +31,10 @@ class List extends React.Component {
         this.close = this.close.bind(this);
         this.handleClickDiv = this.handleClickDiv.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
+        this.handleLoadItemsSuccess = this.handleLoadItemsSuccess.bind(this);
+        this.handleLoadItemsError = this.handleLoadItemsError.bind(this);
+        this.handleRemoveListSuccess = this.handleRemoveListSuccess.bind(this);
+        this.handleRemoveListError = this.handleRemoveListError.bind(this);
     }
     handleClickDiv(e) {
         this.props.closeLists();
@@ -34,29 +43,31 @@ class List extends React.Component {
             (!this.state.opened || //List is close
                 e.target.closest("." + styles["icon-container"])) //Not pressed icon-container or child
         ) {
-            let newState = {
-                opened: !this.state.opened
-            };
             if (!this.items || this.items.length === 0) {
                 this.loadItems();
+            } else {
+                this.setState({ opened: !this.state.opened });
             }
-            this.setState(newState);
         }
     }
+    handleLoadItemsSuccess(data) {
+        if (data.data) {
+            this.items = data.data || [];
+            this.setState({ loadingItems: false });
+        } else if (data.errors) {
+            this.showErrors(data.errors);
+        }
+    }
+    handleLoadItemsError(err) {
+        console.log(err);
+    }
     loadItems() {
-        this.setState({ loadingItems: true });
-        fetch(this.props.base_url + "lists/" + this.props.id + "/items", {
-            method: "GET",
-            headers: this.props.authorization_header
-        })
-            .then(response => {
-                console.log(response);
-                return response.json();
-            })
-            .then(data => {
-                this.items = data.data || [];
-                this.setState({ loadingItems: false });
-            });
+        this.setState({ loadingItems: true, opened: true });
+        doGET(
+            getListItemsURL(this.props.id),
+            this.handleLoadItemsSuccess,
+            this.handleLoadItemsError
+        );
     }
     handleDeleteClick(e) {
         confirmAlert({
@@ -75,17 +86,24 @@ class List extends React.Component {
             ]
         });
     }
+    handleRemoveListSuccess(data) {
+        if (data.status === 204) {
+            this.props.listRemoved(this.props.id);
+        } else if (data.status === 401) {
+            this.props.showErrors([
+                { title: "Unauthorized", detail: "Error with Authentication" }
+            ]);
+        }
+    }
+    handleRemoveListError(err) {
+        console.log(err);
+    }
     removeList() {
-        fetch(this.props.base_url + "lists/" + this.props.id, {
-            method: "DELETE",
-            headers: this.props.authorization_header
-        }).then(response => {
-            if (response.status === 204) {
-                this.props.listRemoved(this.props.id);
-            } else {
-                console.log(response);
-            }
-        });
+        doDELETE(
+            getListURL(this.props.id),
+            this.handleRemoveListSuccess,
+            this.handleRemoveListError
+        );
     }
     close() {
         this.setState({
@@ -146,12 +164,12 @@ class List extends React.Component {
                     <div>
                         <LoadingSpinner isShowing={this.state.loadingItems} />
                         <ul>
-                            {(this.items || []).map(elements => (
+                            {(this.items || []).map(element => (
                                 <ListItem
                                     key={`List#${this.props.id}_Item#${
-                                        elements.id
+                                        element.id
                                     }`}
-                                    {...elements}
+                                    {...element}
                                 />
                             ))}
                         </ul>
