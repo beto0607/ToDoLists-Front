@@ -16,6 +16,12 @@ form {
             margin: 5px auto 20px auto;
             border: 1px solid rgb(141, 141, 141);
         }
+        input:invalid{
+            border-color: red;
+        }
+        input:valid{
+            border-color: green;
+        }
         &.with-errors {
             border: 2px solid red;
             input,
