@@ -171,6 +171,7 @@ class Dashboard extends React.Component {
                             close={this.closeAddList}
                             listAdded={this.listAdded}
                             authorization_header={this.authorization_header}
+                            showErrors={this.showErrors}
                         />
                     )}
                     <div className={styles["lists-container"]}>
