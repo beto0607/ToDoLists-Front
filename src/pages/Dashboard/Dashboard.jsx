@@ -41,6 +41,7 @@ class Dashboard extends React.Component {
             this.handleGetUserListsError = this.handleGetUserListsError.bind(
                 this
             );
+            this.showErrors = this.showErrors.bind(this);
         }
     }
     closeAddList() {
@@ -116,6 +117,7 @@ class Dashboard extends React.Component {
                 authorization_header={this.authorization_header}
                 base_url={this.props.base_url}
                 listRemoved={this.listRemoved}
+                showErrors={this.showErrors}
             />
         );
         this.setState({
@@ -145,6 +147,10 @@ class Dashboard extends React.Component {
             return true;
         });
         this.setState(this.state);
+    }
+    showErrors(errors){
+        errors.forEach( element => {element.type = 'error'});
+        this.setState({messages: errors});
     }
     render() {
         if (this.state.redirect) {
