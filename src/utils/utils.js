@@ -35,7 +35,7 @@ const fromAPI = (url, data = {}, success, error, method = 'GET') => {
     }
     fetch(url, info)
         .then(response => {
-            if(response.statusText === "No Content"){
+            if(response.status === 204){
                 return Promise.resolve(response);
             }else{
                 return response.json()
