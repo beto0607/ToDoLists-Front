@@ -9,7 +9,7 @@
     .add-button-container {
         cursor: pointer;
         position: fixed;
-        top: $dashboard-grid-gap / 2;
+        bottom: $dashboard-grid-gap / 2;
         right: $dashboard-grid-gap / 2;
         background: red;
         border-radius: 100%;

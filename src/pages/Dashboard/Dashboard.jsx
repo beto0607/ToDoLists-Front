@@ -12,38 +12,35 @@ import styles from "./Dashboard.module.scss";
 import NotificationSystem from "../../components/NotificationSystem";
 import { FaPlus } from "react-icons/fa";
 
+import {
+    checkIfUserLoggedIn,
+    doGET,
+    getUserListsURL,
+    getUserId
+} from "../../utils/utils";
+
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
-        if (
-            !localStorage.getItem("token") || //User not logged in
-            new Date(localStorage.getItem("token_expires")) < new Date() //Token expired
-        ) {
-            this.state = {
-                redirect: true,
-                redirect_target: "/auth"
-            };
+        if (!checkIfUserLoggedIn()) {
+            this.state = { redirect_target: "/auth", redirect: true };
         } else {
             this.state = {
-                user_lists_url:
-                    props.base_url +
-                    `users/${localStorage.getItem("user_id")}/lists`,
-                lists_url: props.base_url + "lists",
-                user_token: localStorage.getItem("token"),
-                lists: [],
                 showListNew: false,
                 messages: []
             };
             this.lists = null;
-            this.authorization_header = new Headers({
-                "Content-type": "application/json",
-                Authorization: String.raw`Basic ${this.state.user_token}`
-            });
             this.closeLists = this.closeLists.bind(this);
             this.handleAddButonClick = this.handleAddButonClick.bind(this);
             this.closeAddList = this.closeAddList.bind(this);
             this.listAdded = this.listAdded.bind(this);
             this.listRemoved = this.listRemoved.bind(this);
+            this.handleGetUserListsSuccess = this.handleGetUserListsSuccess.bind(
+                this
+            );
+            this.handleGetUserListsError = this.handleGetUserListsError.bind(
+                this
+            );
         }
     }
     closeAddList() {
@@ -52,41 +49,61 @@ class Dashboard extends React.Component {
     redirect(to = "/auth") {
         this.setState({ redirect: true, redirect_target: to });
     }
-    componentDidMount() {
-        if (this.state.redirect) {
-            return;
-        }
-        fetch(this.state.user_lists_url, { headers: this.authorization_header })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                this.lists_ref = new Array(data.data.length);
-                this.lists = data.data.map((element, index) => {
-                    this.lists_ref[index] = React.createRef();
-                    return (
-                        <List
-                            key={`list#${element.id}`}
-                            {...element}
-                            ref={this.lists_ref[index]}
-                            authorization_header={this.authorization_header}
-                            base_url={this.props.base_url}
-                            listRemoved={this.listRemoved}
-                            closeLists={this.closeLists}
-                        />
-                    );
-                });
-                this.setState(this.state);
-            })
-            .catch(err => {
-                console.log(err);
-                if (err === 401) {
-                    this.redirect("/auth");
-                }
+    handleGetUserListsSuccess(data) {
+        if (data.data) {
+            this.lists_ref = new Array(data.data.length);
+            this.lists = data.data.map((element, index) => {
+                this.lists_ref[index] = React.createRef();
+                return (
+                    <List
+                        key={`list#${element.id}`}
+                        {...element}
+                        ref={this.lists_ref[index]}
+                        authorization_header={this.authorization_header}
+                        base_url={this.props.base_url}
+                        listRemoved={this.listRemoved}
+                        closeLists={this.closeLists}
+                    />
+                );
             });
+            this.setState(this.state);
+        } else if (data.errors) {
+            this.setState({
+                messages: data.errors.map(element => {
+                    return { ...element, type: "error" };
+                })
+            });
+        } else {
+            this.setState({
+                messages: [
+                    {
+                        title: "Unkown error",
+                        detail: "Try to refresh the page",
+                        type: "error"
+                    }
+                ]
+            });
+        }
+    }
+    handleGetUserListsError(err) {
+        console.log(err);
+        if (err === 401) {
+            this.redirect("/auth");
+        } else if (err.errors) {
+            this.setState({
+                messages: err.errors.map(element => {
+                    return { ...element, type: "error" };
+                })
+            });
+        }
+    }
+    componentDidMount() {
+        if (this.state.redirect) return;
+        doGET(
+            getUserListsURL(getUserId()),
+            this.handleGetUserListsSuccess,
+            this.handleGetUserListsError
+        );
     }
     listAdded(data) {
         this.lists_ref.push(React.createRef());
@@ -121,6 +138,7 @@ class Dashboard extends React.Component {
     listRemoved(id) {
         this.lists = this.lists.filter((value, index, arr) => {
             if (value.props.id === id) {
+                //Removes the reference
                 this.lists_ref.splice(index, 1);
                 return false;
             }
@@ -133,7 +151,7 @@ class Dashboard extends React.Component {
             return <Redirect to={this.state.redirect_target} />;
         }
         return (
-            <Layout header_props={{title: 'Dashboard'}}>
+            <Layout header_props={{ title: "Dashboard" }}>
                 <div className={styles["dashboard-container"]}>
                     <NotificationSystem messages={this.state.messages || []} />
                     <div
