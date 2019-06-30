@@ -3,15 +3,21 @@
 
 import React from "react";
 import styles from "./ListNew.module.scss";
+import { doPOST, getUserListsURL, getUserId } from "../../utils/utils";
 
 class ListNew extends React.Component {
     constructor(props) {
         super(props);
-        this.url = `${props.base_url}users/${localStorage.getItem(
-            "user_id"
-        )}/lists`;
         this.handleSubmit = this.handleSubmit.bind(this);
-        //this.authorization_header = new Headers({'Authorization': `Basic ${this.state.user_token}`});
+        this.handleListNewSuccess = this.handleListNewSuccess.bind(this);
+        this.handleListNewError = this.handleListNewError.bind(this);
+    }
+    handleListNewSuccess(data) {
+        this.props.listAdded(data);
+    }
+    handleListNewError(err) {
+        console.log(err);
+        this.props.showErrors(err);
     }
     handleSubmit(e) {
         e.preventDefault();
@@ -28,20 +34,12 @@ class ListNew extends React.Component {
         if (description) {
             data["due_date"] = description;
         }
-        console.log(JSON.stringify({ list: data }));
-        fetch(this.url, {
-            method: "POST",
-            headers: this.props.authorization_header,
-            body: JSON.stringify({ list: data })
-        })
-            .then(response => {
-                console.log(response);
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                this.props.listAdded(data);
-            });
+        doPOST(
+            getUserListsURL(getUserId()),
+            { list: data },
+            this.handleListNewSuccess,
+            this.handleListNewError
+        );
     }
     render() {
         return (
