@@ -34,7 +34,13 @@ const fromAPI = (url, data = {}, success, error, method = 'GET') => {
         info.body = JSON.stringify(data);
     }
     fetch(url, info)
-        .then(response => response.json())
+        .then(response => {
+            if(response.statusText === "No Content"){
+                return Promise.resolve(response);
+            }else{
+                return response.json()
+            }
+        })
         .then(data => success(data))
         .catch(err => error(err));
 }
@@ -42,7 +48,7 @@ export const doGET = (url, success, error) => fromAPI(url, null, success, error,
 export const doPOST = (url, data, success, error) => fromAPI(url, data, success, error, 'POST');
 export const doPUT = (url, data, success, error) => fromAPI(url, data, success, error, 'PUT');
 export const doPATCH = (url, data, success, error) => fromAPI(url, data, success, error, 'PATCH');
-export const doDELETE = (url, success, error) => fromAPI(url, success, error, 'DELETE');
+export const doDELETE = (url, success, error) => fromAPI(url, null, success, error, 'DELETE');
 
 //URLs GETTERS
 const API_URL_BASE = (process && process.env.API_URL_BASE) || 'http://localhost:3001/';
