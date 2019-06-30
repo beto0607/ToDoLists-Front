@@ -44,10 +44,10 @@ export const doPATCH = (url, data, success, error) => fromAPI(url, data, success
 export const doDELETE = (url, success, error) => fromAPI(url, success, error, 'DELETE');
 
 //URLs GETTERS
-const API_URL_BASE = (process && process.env.API_URL_BASE) ||'localhost:3001/';
+const API_URL_BASE = (process && process.env.API_URL_BASE) ||'http://localhost:3001/';
 
 //AUTH - POST
-export const getLoginURL = () => String.raw`${API_URL_BASE}auth`;
+export const getLoginURL = () => String.raw`${API_URL_BASE}auth/login`;
 //USERS - GET(index), POST
 export const getUsersURL = () => String.raw`${API_URL_BASE}users`;
 //USER - GET(show), PUT, PATCH, DELETE
