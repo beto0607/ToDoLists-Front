@@ -34,12 +34,15 @@ class Login extends React.Component {
     }
     handleLoginError(err) {
         console.log(err);
-        this.props.onError([{
-            title: 'Connection error',
-            detail: 'There was an error with the server'
-        }]);
+        this.props.onError([
+            {
+                title: "Connection error",
+                detail: "There was an error with the server"
+            }
+        ]);
     }
     handleSubmit(e) {
+        console.log(e);
         e.preventDefault();
         const data = new FormData(e.target);
         const json_data = {
@@ -61,7 +64,12 @@ class Login extends React.Component {
                 <form onSubmit={this.handleSubmit}>
                     <div className={styles["input-container"]}>
                         <label htmlFor="email">Email:</label>
-                        <input type="email" name="email" id="login-email" />
+                        <input
+                            type="email"
+                            name="email"
+                            id="login-email"
+                            required={true}
+                        />
                     </div>
                     <div className={styles["input-container"]}>
                         <label htmlFor="password">Password:</label>
@@ -70,6 +78,7 @@ class Login extends React.Component {
                             name="password"
                             minLength="6"
                             maxLength="20"
+                            required={true}
                             id="login-password"
                         />
                     </div>

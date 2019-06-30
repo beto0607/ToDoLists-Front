@@ -10,13 +10,13 @@ import Login from "../../components/Login";
 import Register from "../../components/Register";
 import Layout from "../../layouts/Layout";
 import NotificationSystem from "../../components/NotificationSystem";
+import { getUserName, getUsername } from "../../utils/utils";
 
 class Authentication extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             showing: document.location.hash.split("#")[1] || "login",
-            base_url: "http://localhost:3001/",
             messages: [],
             redirect_target: null,
             redirect: false
@@ -26,9 +26,8 @@ class Authentication extends React.Component {
         this.handleRegisterClick = this.handleRegisterClick.bind(this);
 
         this.loginSuccess = this.loginSuccess.bind(this);
-        this.loginError = this.loginError.bind(this);
         this.registerSuccess = this.registerSuccess.bind(this);
-        this.registerError = this.registerError.bind(this);
+        this.showErrors = this.showErrors.bind(this);
 
         this.redirect = this.redirect.bind(this);
     }
@@ -39,15 +38,13 @@ class Authentication extends React.Component {
             redirect_target: to
         });
     }
-
     loginSuccess(data) {
         this.setState({
             messages: [
                 {
                     title: "Welcome back!",
-                    detail: String.raw`It's nice to see you again, ${data
-                        .included[0].attributes.name ||
-                        "@" + data.included[0].attributes.username}!`,
+                    detail: String.raw`It's nice to see you again, ${getUserName() ||
+                        "@" + getUsername()}!`,
                     type: "good"
                 }
             ]
@@ -56,25 +53,19 @@ class Authentication extends React.Component {
             () => {
                 this.redirect("/dashboard");
             },
-            700,
+            1000,
             this
         );
     }
-
-    loginError(errors) {
+    showErrors(errors) {
         this.setState({
             messages: errors.map(e => {
                 return { ...e, type: "error" };
             })
         });
     }
-    registerSuccess(data) {}
-    registerError(errors) {
-        this.setState({
-            messages: errors.map(e => {
-                return { ...e, type: "error" };
-            })
-        });
+    registerSuccess(data) {
+        console.log(data);
     }
     handleLoginClick() {
         this.setState({ showing: "login" });
@@ -86,6 +77,7 @@ class Authentication extends React.Component {
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect_target} />;
         }
+        console.log(styles["options-selector"]);
         return (
             <Layout header_props={{ title: "Authentication" }}>
                 <div className={styles.container}>
@@ -94,9 +86,7 @@ class Authentication extends React.Component {
                             href="#login"
                             onClick={this.handleLoginClick}
                             className={
-                                this.state.showing === "login"
-                                    ? styles.active
-                                    : null
+                                this.state.showing === "login" ? styles.active : undefined
                             }>
                             Login
                         </a>
@@ -104,9 +94,7 @@ class Authentication extends React.Component {
                             href="#register"
                             onClick={this.handleRegisterClick}
                             className={
-                                this.state.showing === "register"
-                                    ? styles.active
-                                    : null
+                                this.state.showing === "register" ? styles.active : undefined
                             }>
                             Register
                         </a>
@@ -115,13 +103,15 @@ class Authentication extends React.Component {
                         <NotificationSystem messages={this.state.messages} />
                         {this.state.showing === "login" && (
                             <Login
-                                base_url={this.state.base_url}
                                 onSuccess={this.loginSuccess}
-                                onError={this.loginError}
+                                onError={this.showErrors}
                             />
                         )}
                         {this.state.showing === "register" && (
-                            <Register base_url={this.state.base_url} />
+                            <Register
+                                onSuccess={this.registerSuccess}
+                                onError={this.showErrors}
+                            />
                         )}
                     </div>
                 </div>
