@@ -10,7 +10,7 @@ import {
     getItemUnsolveURL,
     doPATCH
 } from "../../utils/utils";
-
+import ItemDelete from "./ItemDelete";
 const ListItem = ({ id, attributes, showErrors }) => {
     const { title, status } = attributes;
     const [statusState, setStatus] = useState(status);
@@ -28,7 +28,6 @@ const ListItem = ({ id, attributes, showErrors }) => {
             }
         );
     };
-
     return (
         <li
             className={
@@ -39,6 +38,7 @@ const ListItem = ({ id, attributes, showErrors }) => {
                 {statusState === "DONE" && <FaCheckCircle />}
             </div>
             <span>{title}</span>
+            <ItemDelete id={id} showErrors={showErrors} onDeleteItem={console.log} />
         </li>
     );
 };

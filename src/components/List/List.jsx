@@ -35,13 +35,15 @@ class List extends React.Component {
         this.handleLoadItemsError = this.handleLoadItemsError.bind(this);
         this.handleRemoveListSuccess = this.handleRemoveListSuccess.bind(this);
         this.handleRemoveListError = this.handleRemoveListError.bind(this);
+        this.onDeleteItem = this.onDeleteItem.bind(this);
+    }
+    onDeleteItem(id) {
+        this.items.filter(e => e.id !== id);
     }
     handleClickDiv(e) {
-        if (e.target.closest("." + styles["delete-container"])) {
-            //Clicked on delete-icon
-            //pass
-            return;
-        }
+        //Clicked on delete-icon
+        if (e.target.closest("." + styles["delete-container"])) return;
+
         if (this.state.opened) {
             //is opend
             if (e.target.closest("." + styles["toggle-icon-container"])) {
@@ -166,18 +168,14 @@ class List extends React.Component {
 
                 {this.state.opened && (
                     <div>
-                        {this.state.loadingItems ? (
-                            <LoadingSpinner
-                            />
-                        ) : null}
+                        {this.state.loadingItems ? <LoadingSpinner /> : null}
                         <ul>
                             {(this.items || []).map(element => (
                                 <ListItem
-                                    key={`List#${id}_Item#${
-                                        element.id
-                                    }`}
+                                    key={`List#${id}_Item#${element.id}`}
                                     {...element}
                                     showErrors={this.props.showErrors}
+                                    onDeleteItem={this.onDeleteItem}
                                 />
                             ))}
                         </ul>
