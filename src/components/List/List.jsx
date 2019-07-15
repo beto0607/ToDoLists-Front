@@ -177,6 +177,7 @@ class List extends React.Component {
                                         element.id
                                     }`}
                                     {...element}
+                                    showErrors={this.props.showErrors}
                                 />
                             ))}
                         </ul>
