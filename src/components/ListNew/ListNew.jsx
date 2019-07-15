@@ -25,7 +25,7 @@ const handleSubmit = (event, due_date, { listAdded, showErrors }) => {
     );
 };
 const ListNew = ({ listAdded, showErrors, close }) => {
-    const [due_date, setDueDate] = useState(new Date());
+    const [due_date, setDueDate] = useState(null);
     return (
         <div className={styles["add-list-container"]}>
             <form
@@ -41,8 +41,10 @@ const ListNew = ({ listAdded, showErrors, close }) => {
                     <input type="text" name="title" />
                 </div>
                 <div className={styles["input-container"]}>
-                    <label htmlFor="title">Due date:</label>
+                    <label htmlFor="due_date">Due date:</label>
                     <DatePicker
+                        name="due_date"
+                        placeholderText="Click to select a date" 
                         selected={due_date}
                         onChange={date => setDueDate(date)}
                         showTimeSelect
