@@ -4,12 +4,12 @@
 import React from "react";
 import styles from "./ListItem.module.scss";
 
-import { FaTrashAlt, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaCheckCircle } from "react-icons/fa";
 
 class ListItem extends React.Component {
-    constructor(props){
-    	super(props);
-    }
+    // constructor(props){
+    // 	super(props);
+    // }
 
     render() {
         const {
@@ -20,7 +20,7 @@ class ListItem extends React.Component {
             <li className={styles["container"]}>
                 <span>{title}</span>
                 <div className={styles["status-container"]}>
-                    {status == "DONE" && (
+                    {status === "DONE" && (
                         <FaCheckCircle />
                     )}
                 </div>

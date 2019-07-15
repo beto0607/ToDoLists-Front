@@ -4,13 +4,22 @@
 import React from "react";
 import styles from "./ListNew.module.scss";
 import { doPOST, getUserListsURL, getUserId } from "../../utils/utils";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 class ListNew extends React.Component {
     constructor(props) {
         super(props);
+        this.state = { due_date: new Date() };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleListNewSuccess = this.handleListNewSuccess.bind(this);
         this.handleListNewError = this.handleListNewError.bind(this);
+        this.handleChangeDate = this.handleChangeDate.bind(this);
+    }
+    handleChangeDate(date) {
+        this.setState({
+            due_date: date
+        });
     }
     handleListNewSuccess(data) {
         this.props.listAdded(data);
@@ -26,13 +35,14 @@ class ListNew extends React.Component {
         let data = {
             title: title
         };
-        const due_date = formData.get("due_date");
+        //const due_date = formData.get("due_date");
+        const due_date = this.state.due_date;
         if (due_date) {
             data["due_date"] = due_date;
         }
         const description = formData.get("description");
         if (description) {
-            data["due_date"] = description;
+            data["description"] = description;
         }
         doPOST(
             getUserListsURL(getUserId()),
@@ -55,10 +65,12 @@ class ListNew extends React.Component {
                     </div>
                     <div className={styles["input-container"]}>
                         <label htmlFor="title">Due date:</label>
-                        <input
-                            type="datetime-local"
-                            name="due_date"
-                            defaultValue={new Date().toISOString().slice(0, -1)}
+                        <DatePicker
+                            selected={this.state.due_date}
+                            onChange={this.handleChangeDate}
+                            showTimeSelect
+                            dateFormat="Pp"
+
                         />
                     </div>
                     <div className={styles["input-container"]}>
