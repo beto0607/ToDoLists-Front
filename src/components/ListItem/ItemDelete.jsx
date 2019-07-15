@@ -2,8 +2,8 @@ import { FaTrashAlt } from "react-icons/fa";
 import React from "react";
 import styles from "./ListItem.module.scss";
 import { getItemURL, doDELETE } from "../../utils/utils";
-import { confirmAlert } from "react-confirm-alert"; // Import
-import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 const ItemDelete = ({ id, onDeleteItem, showErrors }) => {
     const onDelete = () => {
         confirmAlert({

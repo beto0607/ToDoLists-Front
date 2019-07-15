@@ -7,6 +7,7 @@ import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
 import ListItem from "../ListItem";
+import ItemCreate from "../ListItem/ItemCreate";
 import LoadingSpinner from "../LoadingSpinner";
 import {
     doGET,
@@ -35,9 +36,14 @@ class List extends React.Component {
         this.handleLoadItemsError = this.handleLoadItemsError.bind(this);
         this.handleRemoveListSuccess = this.handleRemoveListSuccess.bind(this);
         this.handleRemoveListError = this.handleRemoveListError.bind(this);
-        this.onDeleteItem = this.onDeleteItem.bind(this);
+        this.handleDeleteItem = this.handleDeleteItem.bind(this);
+        this.handleCreateItem = this.handleCreateItem.bind(this);
     }
-    onDeleteItem(id) {
+    handleCreateItem(data) {
+        this.items.push(data.data);
+        this.setState({loadItems: false});
+    }
+    handleDeleteItem(id) {
         this.items.filter(e => e.id !== id);
     }
     handleClickDiv(e) {
@@ -170,12 +176,17 @@ class List extends React.Component {
                     <div>
                         {this.state.loadingItems ? <LoadingSpinner /> : null}
                         <ul>
+                            <ItemCreate
+                                list_id={id}
+                                onCreate={this.handleCreateItem}
+                                showErrors={this.props.showErrors}
+                            />
                             {(this.items || []).map(element => (
                                 <ListItem
                                     key={`List#${id}_Item#${element.id}`}
                                     {...element}
                                     showErrors={this.props.showErrors}
-                                    onDeleteItem={this.onDeleteItem}
+                                    onDeleteItem={this.handleDeleteItem}
                                 />
                             ))}
                         </ul>

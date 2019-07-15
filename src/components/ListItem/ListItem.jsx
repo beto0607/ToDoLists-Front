@@ -11,6 +11,7 @@ import {
     doPATCH
 } from "../../utils/utils";
 import ItemDelete from "./ItemDelete";
+
 const ListItem = ({ id, attributes, showErrors }) => {
     const { title, status } = attributes;
     const [statusState, setStatus] = useState(status);
