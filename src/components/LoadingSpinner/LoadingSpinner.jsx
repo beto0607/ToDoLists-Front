@@ -6,9 +6,12 @@ import styles from "./LoadingSpinner.module.scss";
 import Flip from "react-reveal/Flip";
 
 class LoadingSpinner extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
         return (
-            <Flip left when={this.props.isShowing}>
+            <Flip left >
                 <div className={styles["container"]}>
                     <div className={styles["loading-container"]}>Loading</div>
                 </div>

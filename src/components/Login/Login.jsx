@@ -33,7 +33,6 @@ class Login extends React.Component {
         }
     }
     handleLoginError(err) {
-        console.log(err);
         this.props.onError([
             {
                 title: "Connection error",

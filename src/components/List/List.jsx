@@ -37,17 +37,20 @@ class List extends React.Component {
         this.handleRemoveListError = this.handleRemoveListError.bind(this);
     }
     handleClickDiv(e) {
-        this.props.closeLists();
-        if (
-            !e.target.closest("." + styles["delete-container"]) && //Not pressed delete-container or child
-            (!this.state.opened || //List is close
-                e.target.closest("." + styles["icon-container"])) //Not pressed icon-container or child
-        ) {
-            if (!this.items || this.items.length === 0) {
-                this.loadItems();
-            } else {
-                this.setState({ opened: !this.state.opened });
+        if (e.target.closest("." + styles["delete-container"])) {
+            //Clicked on delete-icon
+            //pass
+            return;
+        }
+        if (this.state.opened) {
+            //is opend
+            if (e.target.closest("." + styles["toggle-icon-container"])) {
+                //and clicked in toggle-icon
+                this.setState({ opened: false }); //Close
             }
+        } else {
+            //is closed
+            this.loadItems(); //Load items and open the list
         }
     }
     handleLoadItemsSuccess(data) {
@@ -118,6 +121,7 @@ class List extends React.Component {
             items_done_count,
             items_count
         } = this.props.attributes;
+        const id = this.props.id;
         return (
             <div
                 className={
@@ -126,7 +130,7 @@ class List extends React.Component {
                     (this.state.opened && styles["opened"])
                 }
                 onClick={this.handleClickDiv}>
-                <div className={styles["icon-container"]}>
+                <div className={styles["toggle-icon-container"]}>
                     {this.state.opened ? (
                         <FaCompressArrowsAlt />
                     ) : (
@@ -162,11 +166,14 @@ class List extends React.Component {
 
                 {this.state.opened && (
                     <div>
-                        <LoadingSpinner isShowing={this.state.loadingItems} />
+                        {this.state.loadingItems ? (
+                            <LoadingSpinner
+                            />
+                        ) : null}
                         <ul>
                             {(this.items || []).map(element => (
                                 <ListItem
-                                    key={`List#${this.props.id}_Item#${
+                                    key={`List#${id}_Item#${
                                         element.id
                                     }`}
                                     {...element}

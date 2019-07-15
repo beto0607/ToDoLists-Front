@@ -34,7 +34,7 @@
             perspective(120px);
     }
 
-    .icon-container,
+    .toggle-icon-container,
     .delete-container {
         float: right;
         padding: 10px;
@@ -47,7 +47,7 @@
             background: red;
         }
     }
-    .icon-container {
+    .toggle-icon-container {
         color: black;
         &:hover {
             color: white;

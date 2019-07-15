@@ -4,17 +4,25 @@
 import React from "react";
 import styles from "./ListItem.module.scss";
 
+import { FaTrashAlt, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+
 class ListItem extends React.Component {
-    // constructor(props){
-    // 	super(props);
-    // }
+    constructor(props){
+    	super(props);
+    }
 
     render() {
+        const {
+            title,
+            status
+        } = this.props.attributes;
         return (
             <li className={styles["container"]}>
-                <span>{this.props.description}</span>
+                <span>{title}</span>
                 <div className={styles["status-container"]}>
-                    {this.props.status}
+                    {status == "DONE" && (
+                        <FaCheckCircle />
+                    )}
                 </div>
             </li>
         );
