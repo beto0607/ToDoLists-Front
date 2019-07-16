@@ -6,7 +6,7 @@ import styles from "./List.module.scss";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
-import { ListItem, ItemCreate } from "../ListItem";
+import { Item, ItemCreate } from "../Item";
 import LoadingSpinner from "../LoadingSpinner";
 import {
     doGET,
@@ -44,6 +44,7 @@ class List extends React.Component {
     }
     handleDeleteItem(id) {
         this.items.filter(e => e.id !== id);
+        this.setState({ loadItems: false });
     }
     handleClickDiv(e) {
         //Clicked on delete-icon
@@ -181,7 +182,7 @@ class List extends React.Component {
                                 showErrors={this.props.showErrors}
                             />
                             {(this.items || []).map(element => (
-                                <ListItem
+                                <Item
                                     key={`List#${id}_Item#${element.id}`}
                                     {...element}
                                     showErrors={this.props.showErrors}
