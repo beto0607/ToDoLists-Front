@@ -6,8 +6,7 @@ import styles from "./List.module.scss";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
-import ListItem from "../ListItem";
-import ItemCreate from "../ListItem/ItemCreate";
+import { ListItem, ItemCreate } from "../ListItem";
 import LoadingSpinner from "../LoadingSpinner";
 import {
     doGET,
@@ -41,7 +40,7 @@ class List extends React.Component {
     }
     handleCreateItem(data) {
         this.items.push(data.data);
-        this.setState({loadItems: false});
+        this.setState({ loadItems: false });
     }
     handleDeleteItem(id) {
         this.items.filter(e => e.id !== id);
