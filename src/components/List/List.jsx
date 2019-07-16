@@ -6,7 +6,7 @@ import styles from "./List.module.scss";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
-import ListItem from "../ListItem";
+import { Item, ItemCreate } from "../Item";
 import LoadingSpinner from "../LoadingSpinner";
 import {
     doGET,
@@ -35,13 +35,21 @@ class List extends React.Component {
         this.handleLoadItemsError = this.handleLoadItemsError.bind(this);
         this.handleRemoveListSuccess = this.handleRemoveListSuccess.bind(this);
         this.handleRemoveListError = this.handleRemoveListError.bind(this);
+        this.handleDeleteItem = this.handleDeleteItem.bind(this);
+        this.handleCreateItem = this.handleCreateItem.bind(this);
+    }
+    handleCreateItem(data) {
+        this.items.push(data.data);
+        this.setState({ loadItems: false });
+    }
+    handleDeleteItem(id) {
+        this.items.filter(e => e.id !== id);
+        this.setState({ loadItems: false });
     }
     handleClickDiv(e) {
-        if (e.target.closest("." + styles["delete-container"])) {
-            //Clicked on delete-icon
-            //pass
-            return;
-        }
+        //Clicked on delete-icon
+        if (e.target.closest("." + styles["delete-container"])) return;
+
         if (this.state.opened) {
             //is opend
             if (e.target.closest("." + styles["toggle-icon-container"])) {
@@ -166,17 +174,19 @@ class List extends React.Component {
 
                 {this.state.opened && (
                     <div>
-                        {this.state.loadingItems ? (
-                            <LoadingSpinner
-                            />
-                        ) : null}
+                        {this.state.loadingItems ? <LoadingSpinner /> : null}
                         <ul>
+                            <ItemCreate
+                                list_id={id}
+                                onCreate={this.handleCreateItem}
+                                showErrors={this.props.showErrors}
+                            />
                             {(this.items || []).map(element => (
-                                <ListItem
-                                    key={`List#${id}_Item#${
-                                        element.id
-                                    }`}
+                                <Item
+                                    key={`List#${id}_Item#${element.id}`}
                                     {...element}
+                                    showErrors={this.props.showErrors}
+                                    onDeleteItem={this.handleDeleteItem}
                                 />
                             ))}
                         </ul>

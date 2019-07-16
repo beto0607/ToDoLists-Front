@@ -64,6 +64,7 @@ class Dashboard extends React.Component {
                         base_url={this.props.base_url}
                         listRemoved={this.listRemoved}
                         closeLists={this.closeLists}
+                        showErrors={this.showErrors}
                     />
                 );
             });
