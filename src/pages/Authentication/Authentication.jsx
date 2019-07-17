@@ -6,7 +6,7 @@ import { Redirect } from "react-router-dom";
 
 import styles from "./Authentication.module.scss";
 
-import Login from "../../components/Login";
+import { Login } from "../../components/Login";
 import Register from "../../components/Register";
 import Layout from "../../layouts/Layout";
 import NotificationSystem from "../../components/NotificationSystem";
@@ -86,7 +86,9 @@ class Authentication extends React.Component {
                             href="#login"
                             onClick={this.handleLoginClick}
                             className={
-                                this.state.showing === "login" ? styles.active : undefined
+                                this.state.showing === "login"
+                                    ? styles.active
+                                    : undefined
                             }>
                             Login
                         </a>
@@ -94,7 +96,9 @@ class Authentication extends React.Component {
                             href="#register"
                             onClick={this.handleRegisterClick}
                             className={
-                                this.state.showing === "register" ? styles.active : undefined
+                                this.state.showing === "register"
+                                    ? styles.active
+                                    : undefined
                             }>
                             Register
                         </a>
