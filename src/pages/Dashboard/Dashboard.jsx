@@ -5,7 +5,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 
 import Layout from "../../layouts/Layout";
-import List from "../../components/List";
+import { List } from "../../components/List";
 import ListNew from "../../components/ListNew";
 import styles from "./Dashboard.module.scss";
 
@@ -52,19 +52,19 @@ class Dashboard extends React.Component {
     }
     handleGetUserListsSuccess(data) {
         if (data.data) {
-            this.lists_ref = new Array(data.data.length);
+            // this.lists_ref = new Array(data.data.length);
             this.lists = data.data.map((element, index) => {
-                this.lists_ref[index] = React.createRef();
+                // this.lists_ref[index] = React.createRef();
                 return (
                     <List
                         key={`list#${element.id}`}
                         {...element}
-                        ref={this.lists_ref[index]}
+                        // ref={this.lists_ref[index]}
                         authorization_header={this.authorization_header}
                         base_url={this.props.base_url}
-                        listRemoved={this.listRemoved}
+                        onListDeleted={this.listRemoved}
                         closeLists={this.closeLists}
-                        showErrors={this.showErrors}
+                        onError={this.showErrors}
                     />
                 );
             });
@@ -108,17 +108,17 @@ class Dashboard extends React.Component {
         );
     }
     listAdded(data) {
-        this.lists_ref.push(React.createRef());
+        // this.lists_ref.push(React.createRef());
         this.lists.push(
             <List
-                key={`list#${this.lists_ref.length - 1}`}
+                key={`list#${this.lists.length}`}
                 {...data.data}
                 closeLists={this.closeLists}
-                ref={this.lists_ref[this.lists_ref.length - 1]}
+                // ref={this.lists_ref[this.lists_ref.length - 1]}
                 authorization_header={this.authorization_header}
                 base_url={this.props.base_url}
-                listRemoved={this.listRemoved}
-                showErrors={this.showErrors}
+                onListDeleted={this.listRemoved}
+                onError={this.showErrors}
             />
         );
         this.setState({
@@ -133,25 +133,20 @@ class Dashboard extends React.Component {
         this.closeAddList();
     }
     closeLists() {
-        this.lists_ref.forEach(element => element.current.close());
+        // this.lists_ref.forEach(element => element.current.close());
     }
     handleAddButonClick() {
         this.setState({ showListNew: true });
     }
     listRemoved(id) {
-        this.lists = this.lists.filter((value, index, arr) => {
-            if (value.props.id === id) {
-                //Removes the reference
-                this.lists_ref.splice(index, 1);
-                return false;
-            }
-            return true;
-        });
+        this.lists = this.lists.filter(value => value.props.id !== id);
         this.setState(this.state);
     }
-    showErrors(errors){
-        errors.forEach( element => {element.type = 'error'});
-        this.setState({messages: errors});
+    showErrors(errors) {
+        errors.forEach(element => {
+            element.type = "error";
+        });
+        this.setState({ messages: errors });
     }
     render() {
         if (this.state.redirect) {

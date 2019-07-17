@@ -68,6 +68,7 @@ class Login extends React.Component {
                             name="email"
                             id="login-email"
                             required={true}
+                            tabIndex="1"
                         />
                     </div>
                     <div className={styles["input-container"]}>
@@ -79,9 +80,10 @@ class Login extends React.Component {
                             maxLength="20"
                             required={true}
                             id="login-password"
+                            tabIndex="2"
                         />
                     </div>
-                    <input type="submit" value="Login" />
+                    <input type="submit" value="Login" tabIndex="3" />
                 </form>
             </div>
         );
