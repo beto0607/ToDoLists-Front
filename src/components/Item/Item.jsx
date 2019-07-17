@@ -17,7 +17,7 @@ import {
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 
-export const ItemCreate = ({ list_id, showErrors, onCreate }) => {
+export const ItemCreate = ({ list_id, onCreate, onError }) => {
     const [form, setForm] = useState({ title: "", valid: "empty" });
     const handleSubmit = e => {
         e.preventDefault();
@@ -30,23 +30,27 @@ export const ItemCreate = ({ list_id, showErrors, onCreate }) => {
             getListItemsURL(list_id),
             { item: { title: form.title } },
             onCreate,
-            showErrors
+            onError
         );
     };
     return (
-        <form
-            className={styles["new-item-container"] + " " + styles[form.valid]}
-            onSubmit={handleSubmit}>
-            <input
-                type="text"
-                name="description"
-                value={form.title}
-                onChange={e => setForm({ title: e.target.value || "" })}
-            />
-        </form>
+        <li>
+            <form
+                className={
+                    styles["new-item-container"] + " " + styles[form.valid]
+                }
+                onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    name="description"
+                    value={form.title}
+                    onChange={e => setForm({ title: e.target.value || "" })}
+                />
+            </form>
+        </li>
     );
 };
-export const ItemDelete = ({ id, onDeleteItem, showErrors }) => {
+export const ItemDelete = ({ id, onDeleteItem, onError }) => {
     const onDelete = () => {
         confirmAlert({
             title: "Are you sure?",
@@ -55,7 +59,7 @@ export const ItemDelete = ({ id, onDeleteItem, showErrors }) => {
                 {
                     label: "Yes",
                     onClick: () =>
-                        doDELETE(getItemURL(id), onDeleteItem, showErrors)
+                        doDELETE(getItemURL(id), ()=>onDeleteItem(id), onError)
                 },
                 {
                     label: "No"
@@ -70,7 +74,7 @@ export const ItemDelete = ({ id, onDeleteItem, showErrors }) => {
     );
 };
 
-export const Item = ({ id, attributes, showErrors, onDeleteItem }) => {
+export const Item = ({ id, attributes, onError, onDeleteItem }) => {
     const { title, status } = attributes;
     const [statusState, setStatus] = useState(status);
     const handleItemClick = () => {
@@ -82,9 +86,7 @@ export const Item = ({ id, attributes, showErrors, onDeleteItem }) => {
             ({ data }) => {
                 setStatus(data.attributes.status);
             },
-            errors => {
-                showErrors(errors);
-            }
+            onError
         );
     };
     return (
@@ -96,11 +98,7 @@ export const Item = ({ id, attributes, showErrors, onDeleteItem }) => {
                 {statusState === "DONE" && <FaCheckCircle />}
             </div>
             <span onClick={handleItemClick}>{title}</span>
-            <ItemDelete
-                id={id}
-                showErrors={showErrors}
-                onDeleteItem={onDeleteItem}
-            />
+            <ItemDelete id={id} onError={onError} onDeleteItem={onDeleteItem} />
         </li>
     );
 };
