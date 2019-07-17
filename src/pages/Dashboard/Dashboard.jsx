@@ -22,130 +22,42 @@ import {
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
-        if (!checkIfUserLoggedIn()) {
+        this.state = {
+            showListNew: false,
+            messages: [],
+            lists: [],
+            redirect_target: "",
+            redirect: false
+        };
+        if (!checkIfUserLoggedIn())
             this.state = { redirect_target: "/auth", redirect: true };
-        } else {
-            this.state = {
-                showListNew: false,
-                messages: []
-            };
-            this.lists = null;
-            this.closeLists = this.closeLists.bind(this);
-            this.handleAddButonClick = this.handleAddButonClick.bind(this);
-            this.closeAddList = this.closeAddList.bind(this);
-            this.listAdded = this.listAdded.bind(this);
-            this.listRemoved = this.listRemoved.bind(this);
-            this.handleGetUserListsSuccess = this.handleGetUserListsSuccess.bind(
-                this
-            );
-            this.handleGetUserListsError = this.handleGetUserListsError.bind(
-                this
-            );
-            this.showErrors = this.showErrors.bind(this);
-        }
-    }
-    closeAddList() {
-        this.setState({ showListNew: false });
+        this.showErrors = this.showErrors.bind(this);
     }
     redirect(to = "/auth") {
         this.setState({ redirect: true, redirect_target: to });
-    }
-    handleGetUserListsSuccess(data) {
-        if (data.data) {
-            // this.lists_ref = new Array(data.data.length);
-            this.lists = data.data.map((element, index) => {
-                // this.lists_ref[index] = React.createRef();
-                return (
-                    <List
-                        key={`list#${element.id}`}
-                        {...element}
-                        // ref={this.lists_ref[index]}
-                        authorization_header={this.authorization_header}
-                        base_url={this.props.base_url}
-                        onListDeleted={this.listRemoved}
-                        closeLists={this.closeLists}
-                        onError={this.showErrors}
-                    />
-                );
-            });
-            this.setState(this.state);
-        } else if (data.errors) {
-            this.setState({
-                messages: data.errors.map(element => {
-                    return { ...element, type: "error" };
-                })
-            });
-        } else {
-            this.setState({
-                messages: [
-                    {
-                        title: "Unkown error",
-                        detail: "Try to refresh the page",
-                        type: "error"
-                    }
-                ]
-            });
-        }
-    }
-    handleGetUserListsError(err) {
-        console.log(err);
-        if (err === 401) {
-            this.redirect("/auth");
-        } else if (err.errors) {
-            this.setState({
-                messages: err.errors.map(element => {
-                    return { ...element, type: "error" };
-                })
-            });
-        }
     }
     componentDidMount() {
         if (this.state.redirect) return;
         doGET(
             getUserListsURL(getUserId()),
-            this.handleGetUserListsSuccess,
-            this.handleGetUserListsError
-        );
-    }
-    listAdded(data) {
-        // this.lists_ref.push(React.createRef());
-        this.lists.push(
-            <List
-                key={`list#${this.lists.length}`}
-                {...data.data}
-                closeLists={this.closeLists}
-                // ref={this.lists_ref[this.lists_ref.length - 1]}
-                authorization_header={this.authorization_header}
-                base_url={this.props.base_url}
-                onListDeleted={this.listRemoved}
-                onError={this.showErrors}
-            />
-        );
-        this.setState({
-            messages: [
-                {
-                    title: "New list:",
-                    detail: String.raw`Created list #${data.data.id}`,
-                    type: "good"
+            data => {
+                if (data.data) {
+                    this.setState({ lists: data.data });
+                } else {
+                    this.showErrors(data.errors);
                 }
-            ]
-        });
-        this.closeAddList();
-    }
-    closeLists() {
-        // this.lists_ref.forEach(element => element.current.close());
-    }
-    handleAddButonClick() {
-        this.setState({ showListNew: true });
-    }
-    listRemoved(id) {
-        this.lists = this.lists.filter(value => value.props.id !== id);
-        this.setState(this.state);
+            },
+            errors => {
+                if (errors === 401) {
+                    this.redirect("/auth");
+                } else {
+                    this.showErrors(errors);
+                }
+            }
+        );
     }
     showErrors(errors) {
-        errors.forEach(element => {
-            element.type = "error";
-        });
+        errors.forEach(element => (element.type = "error"));
         this.setState({ messages: errors });
     }
     render() {
@@ -155,23 +67,51 @@ class Dashboard extends React.Component {
         return (
             <Layout header_props={{ title: "Dashboard" }}>
                 <div className={styles["dashboard-container"]}>
-                    <NotificationSystem messages={this.state.messages || []} />
+                    <NotificationSystem messages={this.state.messages} />
                     <div
                         className={styles["add-button-container"]}
-                        onClick={this.handleAddButonClick}>
+                        onClick={() => this.setState({ showListNew: true })}>
                         <FaPlus />
                     </div>
                     {this.state.showListNew && (
                         <ListNew
                             base_url={this.props.base_url}
-                            close={this.closeAddList}
-                            listAdded={this.listAdded}
+                            close={() => {
+                                this.setState({ showListNew: false });
+                            }}
+                            listAdded={data => {
+                                this.setState({
+                                    lists: [...this.state.lists, data.data],
+                                    messages: [
+                                        {
+                                            title: "New list:",
+                                            detail:
+                                                "Created list #" + data.data.id,
+                                            type: "good"
+                                        }
+                                    ],
+                                    showListNew: false
+                                });
+                            }}
                             authorization_header={this.authorization_header}
                             showErrors={this.showErrors}
                         />
                     )}
                     <div className={styles["lists-container"]}>
-                        {this.lists}
+                        {this.state.lists.map((element, index) => (
+                            <List
+                                key={`list#${index}`}
+                                {...element}
+                                onListDeleted={id => {
+                                    this.setState({
+                                        lists: this.state.lists.filter(
+                                            e => e.id !== id
+                                        )
+                                    });
+                                }}
+                                onError={this.showErrors}
+                            />
+                        ))}
                     </div>
                 </div>
             </Layout>

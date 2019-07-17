@@ -26,7 +26,7 @@ const ListInfo = ({
     description,
     items_done_count,
     items_count,
-    opened, 
+    opened,
     list_id
 }) => {
     due_date =
@@ -42,7 +42,10 @@ const ListInfo = ({
     }
     return (
         <div>
-            <strong>#{list_id+" "}{title}</strong>
+            <strong>
+                #{list_id + " "}
+                {title}
+            </strong>
             <span>{due_date}</span>
             <span>Items: {`${items_done_count}/${items_count}`}</span>
             {description && <p>{description}</p>}
@@ -58,7 +61,11 @@ const ListDelete = ({ list_id, onListDeleted, onError }) => {
                 {
                     label: "Yes",
                     onClick: () => {
-                        doDELETE(getListURL(list_id), onListDeleted, onError);
+                        doDELETE(
+                            getListURL(list_id),
+                            () => onListDeleted(list_id),
+                            onError
+                        );
                     }
                 },
                 {
