@@ -11,7 +11,7 @@ export const setUserData = ({ user_id, username, email, name }) => {
     localStorage.setItem('user_id', user_id);
     localStorage.setItem('username', username);
     localStorage.setItem('email', email);
-    localStorage.setItem('name', name);
+    localStorage.setItem('name', name || '');
 };
 export const getUserId = () => localStorage.getItem('user_id', '-1');
 export const getUsername = () => localStorage.getItem('username');
