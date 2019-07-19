@@ -3,13 +3,10 @@
 
 import React from "react";
 import styles from "./Register.module.scss";
-
+import { doPOST, getUsersURL, setUserData } from "../../utils/utils";
 class Register extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            url: this.props.base_url + "users"
-        };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     handleSubmit(e) {
@@ -23,31 +20,30 @@ class Register extends React.Component {
                 password_confirmation: data.get("password_confirm")
             }
         };
-        fetch(this.state.url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(json_data)
-        })
-            .then(function(response) {
-                console.log(response);
-                return response.json();
-            })
-            .then(data => {
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("username", data.username);
-                localStorage.setItem("token_expires", data.exp);
-                if (this.props.success) this.props.success();
-            })
-            .catch(err => {
-                if (this.props.error) {
-                    if (err.errors) {
-                        this.props.error(err.errors.join(" "));
-                    } else {
-                        this.props.error("An unknown error has occurred.");
-                        console.log(err);
-                    }
+        doPOST(
+            getUsersURL(),
+            json_data,
+            data => {
+                if (data.data) {
+                    setUserData({
+                        user_id: data.data.id,
+                        ...data.data.attributes
+                    });
+                    this.props.onSuccess(data);
+                } else {
+                    this.props.onError(data.errors);
                 }
-            });
+            },
+            errors => {
+                console.log(errors);
+                this.props.onError([
+                    {
+                        title: "Connection error",
+                        detail: "There was an error with the server"
+                    }
+                ]);
+            }
+        );
     }
     render() {
         return (
