@@ -5,18 +5,11 @@ import React from "react";
 import styles from "./LoadingSpinner.module.scss";
 import Flip from "react-reveal/Flip";
 
-class LoadingSpinner extends React.Component {
-    // constructor(props) {
-    //     super(props);
-    // }
-    render() {
-        return (
-            <Flip left >
-                <div className={styles["container"]}>
-                    <div className={styles["loading-container"]}>Loading</div>
-                </div>
-            </Flip>
-        );
-    }
-}
+const LoadingSpinner = () => (
+    <Flip left>
+        <div className={styles["container"]}>
+            <div className={styles["loading-container"]}>Loading</div>
+        </div>
+    </Flip>
+);
 export default LoadingSpinner;
